@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %} Orders {% endblock %}
+{% block function %} onload="fillInSelect()" {% endblock %}
+
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <h1 class="display-6">Studio Bansky</h1>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+              <li class="nav-item active">
+                <a class="nav-link" href="persona/ordersList">Orders</a>
+              </li>
+            </ul>
+          </div>
+        <span class="navbar-text">
+           <button type="button" class="btn btn-link text-light" onclick="location.href='persona/iniciarSesion'">Sing out</button>
+       </span>
+</nav>
+</header>
+{% endblock %}
+
+
+{% block content %}
+<h1 class='text-center'>Orders</h1>
+        <form action="#" theme="simple" class="text-center">
+            <button type="button" class="btn btn-dark" >New Order</button>
+        </form>
+        <p></p>
+        <table class="table table-striped table-borderless container"> 
+            <thead class="thead-dark"
+                <tr>
+                    <th>Orders</th>
+                    <th class="text-center">Details</th>
+                </tr>
+            </thead>
+            {%for o in orders%}
+            <tbody>
+                <tr>
+                    <th scope="row">
+                        {{o}}
+                    </th>
+                    <td>
+                        Aqui no se que más vaya.               
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}      
+        </table>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} Welcome {% endblock %}
+{% block function %} onload="fillInSelect()" {% endblock %}
+
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <h1 class="display-6">Studio Bansky</h1>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+              <li class="nav-item active">
+                <a class="nav-link" href="persona/ordersList">Orders</a>
+              </li>
+            </ul>
+          </div>
+        <span class="navbar-text">
+           <button type="button" class="btn btn-link text-light" onclick="location.href='persona/iniciarSesion'">Sing out</button>
+       </span>
+</nav>
+</header>
+{% endblock %}
+
+
+{% block content %}
+<div class="container text-center" id="contenido">
+    <h1 class="h1" mb-3>Welcome {{user.get_username}}</h1>    
+</div>
+{% endblock %}
