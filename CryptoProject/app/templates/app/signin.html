@@ -1,0 +1,50 @@
+﻿<!doctype html>
+<html class="no-js" lang="es" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Art</title>
+    {% load static %}
+    <link rel="stylesheet" href = {% static "css/foundation.css"%}/>
+    <link rel="stylesheet" href = {% static "css/app.css"%}/>
+    <link rel="stylesheet" href = {% static "css/login.css"%}/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body>
+    <div class="row column align-center medium-5 large-4">
+        <div class="header-logo">
+            <figure class="header-logo-img">
+                <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="380" height="220">
+                <figcaption class="form-registration-img-caption">"It's one thing to make a picture of what a person looks like, it's another thing to make a portrait of who they are."</figcaption>
+            </figure>
+        </div>
+    </div>
+    <div class="row column align-center medium-5 large-4">
+        <div class="form-registration">
+            <form data-abide novalidate class="form-registration-group" method="post">
+                <p class="or-divider"></p>
+                <p class="form-registration-advice">To continue, sign in at Art.</p>
+                <a class="form-registration-facebook-button" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i> Sign In With facebook</a>
+                <a class="form-registration-twitter-button" href="#"><i class="fa fa-twitter" aria-hidden="true"></i> Sign In With Twitter</a>
+                <a class="form-registration-google-button" href="#"><i class="fa fa-google" aria-hidden="true"></i> Sign In With Gmail</a>
+                <p class="or-divider"><span>or</span></p>
+
+                <input id="email" class="form-registration-input" type="email" placeholder="Email" required>
+                <input id="password" class="form-registration-input" type="password" placeholder="Password" aria-describedby="passwordField" required>
+                <input id="checkboxRemember" class="form-registration-checkbox-button" type="checkbox"><label for="checkboxRemember">Remember Me</label>
+                <input class="form-registration-submit-button" type="submit" value="Sign In">
+
+                <p class="form-registration-password"><a href="#">Have you forgot your password?</a></p>
+                <p class="or-divider"></p>
+                <p class="form-registration-advice">Don't you have an account?</p>
+                <a class="form-registration-signup-button" href="#">Sign Up at Art</a>
+            </form>
+        </div>
+    </div>
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/vendor/what-input.js"></script>
+    <script src="js/vendor/foundation.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
