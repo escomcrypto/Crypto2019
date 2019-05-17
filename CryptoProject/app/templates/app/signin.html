@@ -23,6 +23,7 @@
     <div class="row column align-center medium-5 large-4">
         <div class="form-registration">
             <form data-abide novalidate class="form-registration-group" method="post">
+                {% csrf_token %}
                 <p class="or-divider"></p>
                 <p class="form-registration-advice">To continue, sign in at Art.</p>
                 <a class="form-registration-facebook-button" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i> Sign In With facebook</a>

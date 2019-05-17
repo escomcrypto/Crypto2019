@@ -11,7 +11,7 @@ def home(request):
     assert isinstance(request, HttpRequest)
     return render(
         request,
-        'app/signin.html',
+        'app/client.html',
         {
             'title':'Home Page',
             'year':datetime.now().year,
