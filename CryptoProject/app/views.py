@@ -8,7 +8,7 @@ from django.http import HttpRequest
 
 def home(request):
     """Renders the home page."""
-    user = assert isinstance(request, HttpRequest)
+    assert isinstance(request, HttpRequest)
     return render(
         request,
         'app/client.html',
