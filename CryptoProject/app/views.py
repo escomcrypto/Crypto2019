@@ -11,12 +11,13 @@ def home(request):
     assert isinstance(request, HttpRequest)
     return render(
         request,
-        'app/client.html',
+        'app/signin.html',
         {
             'title':'Home Page',
             'year':datetime.now().year,
         }
     )
+    
 
 #def contact(request):
 #    """Renders the contact page."""

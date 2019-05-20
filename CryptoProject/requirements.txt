@@ -6,3 +6,4 @@ setuptools==41.0.1
 sqlparse==0.3.0
 wheel==0.33.4
 wincertstore==0.2
+mysql-connector-python==8.0.16
