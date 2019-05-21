@@ -1,0 +1,23 @@
+Privacy Policy
+
+Art@localhost Privacy Policy
+
+This Privacy Policy was last modified on May 19th 2019
+
+Our company "Art,Inc." operates "https://localhost:8000". This page informs you of our policies
+regarding the collection, use and disclosure of Personal Information we receive from users of
+the site.
+
+We use your Personal Information only for providing and improving the Site. By using the Site,
+you agree to the collection and use of information in accordance with this policy.
+
+Information Collection And Use
+While using our Site, we may ask you to provide us with certain personally indentificable information
+that can be used to contact you or identify you. Personally identificable information may include,
+but is not limited.
+
+Protection
+We protect your information using technical and administrative security measures (cryptographic)
+to reduce the risks of loss and misuse of that information. The data transfered between your
+browser and our server is encrypted end to end, as well your information stored within our
+database.
