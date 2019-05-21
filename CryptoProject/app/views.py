@@ -25,7 +25,9 @@ def ordersList(request):
             orders.append(result[r]['name'])
     else:
         print("No hay pedidos")
-    return render(request, 'requestsClient.html', 
+    return render(
+        request, 
+        'app/requestsClient.html', 
         {
             'orders':orders,
             'title':'Orders',

@@ -6,14 +6,9 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{{ title }} - Art</title>
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}" />
-    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
     <link rel="stylesheet" href = {% static "css/client.css"%}/>
     <link rel="stylesheet" href="https://dhbhdrzi4tiry.cloudfront.net/cdn/sites/foundation.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -21,8 +16,8 @@
             <ul class="menu align-center">
                   <li> <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="120" height="20">
                   </li>
-                  <li><a href="#">Home</a></li>
-                  <li><a href="app/ordersList">Requests</a></li>
+                  <li><a href="welcome/">Home</a></li>
+                  <li><a href="ordersList/">Requests</a></li>
                   <li><a href="#">Orders</a></li>
                   <li><a href="#">Delivers</a></li>
             </ul>
@@ -39,9 +34,6 @@
         </footer>
     </div>
 
-    <script src="{% static 'app/scripts/jquery-1.10.2.js' %}"></script>
-    <script src="{% static 'app/scripts/bootstrap.js' %}"></script>
-    <script src="{% static 'app/scripts/respond.js' %}"></script>
     <script src="{% static 'js/client.js' %}"></script>
 {% block scripts %}{% endblock %}
 

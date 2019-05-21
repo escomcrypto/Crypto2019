@@ -5,12 +5,15 @@ Definition of urls for CryptoProject.
 from datetime import datetime
 from django.urls import path
 from django.contrib import admin
+from django.conf.urls import url, include
 from django.contrib.auth.views import LoginView, LogoutView
 from app import forms, views
 
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('ordersList/', views.ordersList, name="ordersList"),
+    path('welcome/', views.home , name="welcome"),
 
     #path('contact/', views.contact, name='contact'),
     #path('about/', views.about, name='about'),
