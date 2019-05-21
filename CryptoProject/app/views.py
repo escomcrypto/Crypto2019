@@ -22,7 +22,7 @@ def ordersList(request):
     result = PaintingRequest.objects.filter(username="mayrasho").values()
     if(len(result)!=0):
         for r in range(0,len(result)):
-            orders.append(result[r]['name'])
+            orders.append(result[r]['nameRequest'])
     else:
         print("No hay pedidos")
     return render(
@@ -35,6 +35,21 @@ def ordersList(request):
         }
     )
 
+def addRequest(request):
+    return render(request,'app/newOrder.html',
+    {
+        'title':'New Request',
+        'year':datetime.now().year,
+    }
+    )
+
+def newOrder(request):
+    return render(request,'app/newOrder.html',
+    {
+        'title':'New Request',
+        'year':datetime.now().year,
+    }
+    )
 
 #def contact(request):
 #    """Renders the contact page."""
