@@ -6,13 +6,24 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
-class BootstrapAuthenticationForm(AuthenticationForm):
-    """Authentication form which uses boostrap CSS."""
-    username = forms.CharField(max_length=254,
-                               widget=forms.TextInput({
-                                   'class': 'form-control',
-                                   'placeholder': 'User name'}))
-    password = forms.CharField(label=_("Password"),
+class LoginAuthenticationForm(forms.Form):
+    email = forms.CharField(max_length=80,
+                            label='',
+                            required=True,
+                            widget=forms.EmailInput({
+                                'id': 'email',
+                                'type': 'email',
+                                'class': 'form-registration-input',
+                                'placeholder': 'Email',
+                                }))
+
+    password = forms.CharField(label='',
+                               required=True,
                                widget=forms.PasswordInput({
-                                   'class': 'form-control',
-                                   'placeholder':'Password'}))
+                                    'id': 'password',
+                                'type': 'password',
+                                'class': 'form-registration-input',
+                                'placeholder': 'Password',
+                                'aria-describedby': "passwordField",
+                                'required': 'True',
+                                    }))

@@ -22,29 +22,21 @@
     </div>
     <div class="row column align-center medium-5 large-4">
         <div class="form-registration">
-            {% block content %}
-            <form class="form-registration-group" action="/" method="POST">
-                {% csrf_token %}
+            <form data-abide novalidate class="form-registration-group" action="">
                 <p class="or-divider"></p>
-                <p class="form-registration-advice">To continue, sign in at Art.</p>
-                <a class="form-registration-facebook-button" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i> Sign In With facebook</a>
-                <a class="form-registration-twitter-button" href="#"><i class="fa fa-twitter" aria-hidden="true"></i> Sign In With Twitter</a>
-                <a class="form-registration-google-button" href="#"><i class="fa fa-google" aria-hidden="true"></i> Sign In With Gmail</a>
+                <a class="form-registration-facebook-button" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i> Sign Up With facebook</a>
+                <a class="form-registration-twitter-button" href="#"><i class="fa fa-twitter" aria-hidden="true"></i> Sign Up With Twitter</a>
+                <a class="form-registration-google-button" href="#"><i class="fa fa-google" aria-hidden="true"></i> Sign Up With Gmail</a>
                 <p class="or-divider"><span>or</span></p>
-
-                {{form}}
-                <!--
-                <input id="checkboxRemember" class="form-registration-checkbox-button" type="checkbox"><label for="checkboxRemember">Remember Me</label>
-                -->
-
-                <input class="form-registration-submit-button" type="submit" value="Sign In">
-
-                <p class="form-registration-password"><a href="#">Have you forgot your password?</a></p>
-                <p class="or-divider"></p>
-                <p class="form-registration-advice">Don't you have an account?</p>
-                <a class="form-registration-signup-button" href="/register/">Sign Up at Art</a>
+                <p class="form-registration-advice">Sign up with your email</p>
+                <input id="email" class="form-registration-input" type="email" placeholder="Email">
+                <input id="emailc" class="form-registration-input" type="email" placeholder="Email Confirmation">
+                <input id="password" class="form-registration-input" type="password" placeholder="Password" />
+                <input id="username" class="form-registration-input" type="text" placeholder="What's your name?">
+                <p class="form-registration-terms"><a href="#">Terms &amp; Conditions</a>|<a href="#">Privacy</a></p>
+                <input class="form-registration-submit-button" type="submit" value="Sign Up">
+                <p class="form-registration-member-signin">Already a member? <a href="#">Sign in</a></p>
             </form>
-            {% endblock content %}
         </div>
     </div>
     <!-- Compressed JavaScript -->
