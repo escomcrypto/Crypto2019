@@ -5,82 +5,8 @@ from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA384
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
-from datetime import datetime
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.http import HttpRequest
-from app.models import PaintingRequest
-
-from .forms import LoginAuthenticationForm
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
-
-def home(request):
-    if request.method == 'POST':
-        print('reading method post')
-        # Create a form instance and populated with data from request:
-        authentication_form = LoginAuthenticationForm(request.POST)
-        # Check whether it's valid:
-        if authentication_form.is_valid():
-            return HttpResponseRedirect('register')
-
-    form = LoginAuthenticationForm()
-
-    """Renders the home page."""
-    assert isinstance(request, HttpRequest)
-    return render(request,
-        'app/signin.html',
-        {
-            'title':'Home Page',
-            'year':datetime.now().year,
-            'form':form
-        })
-
-def register(request):
-      """Renders the register page """
-      assert isinstance(request, HttpRequest)
-      return render(request,
-          'app/signup.html',
-          {
-              'title':'Sign Up - Art',
-              'year':datetime.now().year,
-          })
-    
-#In this view a list of requests that the user has made will be shown
-def ordersList(request):
-    orders=[]
-    #result = PaintingRequest.objects.filter(username=request.user.id).values()
-    result = PaintingRequest.objects.filter(username="mayrasho").values()
-    if(len(result)!=0):
-        for r in range(0,len(result)):
-            orders.append(result[r]['nameRequest'])
-    else:
-        print("No hay pedidos")
-    return render(
-        request, 
-        'app/requestsClient.html', 
-        {
-            'orders':orders,
-            'title':'Orders',
-            'year':datetime.now().year,
-        }
-    )
-
-'''def addRequest(request):
-    return render(request,'app/newOrder.html',
-    {
-        'title':'New Request',
-        'year':datetime.now().year,
-    }
-    )'''
-
-def newOrder(request):
-    return render(request,'app/newOrder.html',
-    {
-        'title':'New Request',
-        'year':datetime.now().year,
-    }
-    )
 
 def writeBinFile(file_bytes, file_name):
     """write a binary file in base64"""
@@ -150,3 +76,34 @@ def generate_RSA_keys(id):
     public_key = key.publickey().export_key()
     pubkey_file = open(BASE_DIR+'/keys/users/'+str(id)+'_public.pem', 'wb')
     pubkey_file.write(public_key)
+
+def signing_process(user_id, order_id):
+    """sign the order_confirmation"""
+    order_file = open(BASE_DIR+'/app/static/orders/'+str(order_id)+'_order.txt', 'r')
+    order = order_file.read().encode()  #encode cast string to bytes
+    private_key = RSA.import_key(open(BASE_DIR+'/keys/users/'+str(user_id)+'_private.pem').read())
+    h = SHA384.new(order)
+    signature = pkcs1_15.new(private_key).sign(h)
+    writeBinFile(signature, BASE_DIR+'/app/static/orders/'+str(order_id)+'_signature.bin')
+
+def verifying_process(user_id, order_id):
+    """verifying"""
+    public_key = RSA.import_key(open(BASE_DIR+'/keys/users/'+str(user_id)+'_public.pem').read())
+    order_file = open(BASE_DIR+'/app/static/orders/'+str(order_id)+'_order.txt', 'r')
+    order = order_file.read().encode() #encode cast string to bytes
+    signature = readBinFile(BASE_DIR+'/app/static/orders/'+str(order_id)+'_signature.bin')
+    h = SHA384.new(order)
+    try:
+        pkcs1_15.new(public_key).verify(h, signature)
+        print("The signature is valid")
+    except (ValueError, TypeError):
+        print("The signature is not valid")
+
+if __name__ == '__main__':
+    generate_key(1)
+    generate_iv(1)
+    encrypt_image(1,BASE_DIR+'/app/static/images/originals/mensaje.jpg')
+    decrypt_image(1)
+    generate_RSA_keys(2)
+    #signing_process(2, 2)
+    verifying_process(2, 2)
