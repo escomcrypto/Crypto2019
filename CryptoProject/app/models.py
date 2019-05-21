@@ -3,6 +3,7 @@ Definition of models.
 """
 
 from django.db import models
+from django.utils import timezone
 
 #Model for the request
 class PaintingRequest(models.Model):
