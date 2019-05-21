@@ -33,13 +33,13 @@
                 <p class="or-divider"><span>or</span></p>
 
                 {{form}}
-                <!--
-                <input id="checkboxRemember" class="form-registration-checkbox-button" type="checkbox"><label for="checkboxRemember">Remember Me</label>
-                -->
+       
+                <input id="rememberChkBox" class="form-registration-checkbox-button" type="checkbox"><label for="checkboxRemember">Remember Me</label>
 
                 <input class="form-registration-submit-button" type="submit" value="Sign In">
-
+                <!--
                 <p class="form-registration-password"><a href="#">Have you forgot your password?</a></p>
+                    -->
                 <p class="or-divider"></p>
                 <p class="form-registration-advice">Don't you have an account?</p>
                 <a class="form-registration-signup-button" href="/register/">Sign Up at Art</a>
@@ -49,5 +49,35 @@
     </div>
     <!-- Compressed JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/js/foundation.min.js" integrity="sha256-/PFxCnsMh+nTuM0k3VJCRch1gwnCfKjaP8rJNq5SoBg= sha384-9ksAFjQjZnpqt6VtpjMjlp2S0qrGbcwF/rvrLUg2vciMhwc1UJJeAAOLuJ96w+Nj sha512-UMSn6RHqqJeJcIfV1eS2tPKCjzaHkU/KqgAnQ7Nzn0mLicFxaVhm9vq7zG5+0LALt15j1ljlg8Fp9PT1VGNmDw==" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- Remember me JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
+    <script>
+         $(function () {
+            if (localStorage.chkbox && localStorage.chkbox != '') {
+                $('#rememberChkBox').attr('checked', 'checked');
+                $('#signinId').val(localStorage.username);
+                $('#signinPwd').val(localStorage.pass);
+            } else {
+                $('#rememberChkBox').removeAttr('checked');
+                $('#signinId').val('');
+                $('#signinPwd').val('');
+            }
+
+             $('#rememberChkBox').click(function () {
+                 console.log("checked")
+                if ($('#rememberChkBox').is(':checked')) {
+                    // save username and password
+                    localStorage.username = $('#signinId').val();
+                    localStorage.pass = $('#signinPwd').val();
+                    localStorage.chkbox = $('#rememberChkBox').val();
+                } else {
+                    localStorage.username = '';
+                    localStorage.pass = '';
+                    localStorage.chkbox = '';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

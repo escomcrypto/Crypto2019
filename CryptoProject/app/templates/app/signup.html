@@ -22,20 +22,17 @@
     </div>
     <div class="row column align-center medium-5 large-4">
         <div class="form-registration">
-            <form data-abide novalidate class="form-registration-group" action="">
+            <form data-abide novalidate class="form-registration-group" method="POST">
                 <p class="or-divider"></p>
                 <a class="form-registration-facebook-button" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i> Sign Up With facebook</a>
                 <a class="form-registration-twitter-button" href="#"><i class="fa fa-twitter" aria-hidden="true"></i> Sign Up With Twitter</a>
                 <a class="form-registration-google-button" href="#"><i class="fa fa-google" aria-hidden="true"></i> Sign Up With Gmail</a>
                 <p class="or-divider"><span>or</span></p>
                 <p class="form-registration-advice">Sign up with your email</p>
-                <input id="email" class="form-registration-input" type="email" placeholder="Email">
-                <input id="emailc" class="form-registration-input" type="email" placeholder="Email Confirmation">
-                <input id="password" class="form-registration-input" type="password" placeholder="Password" />
-                <input id="username" class="form-registration-input" type="text" placeholder="What's your name?">
-                <p class="form-registration-terms"><a href="#">Terms &amp; Conditions</a>|<a href="#">Privacy</a></p>
+                {{form}}
+                <p class="form-registration-terms"><a href="#">Terms &amp; Conditions</a>|<a href= {% static "policies/privacy_policy.txt"%}>Privacy</a></p>
                 <input class="form-registration-submit-button" type="submit" value="Sign Up">
-                <p class="form-registration-member-signin">Already a member? <a href="#">Sign in</a></p>
+                <p class="form-registration-member-signin">Already a member? <a href="/">Sign in</a></p>
             </form>
         </div>
     </div>
