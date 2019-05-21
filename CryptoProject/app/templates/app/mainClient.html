@@ -1,0 +1,12 @@
+{% extends "app/layout.html" %}
+
+  {% block content %}
+  <br/>
+  <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="text-dark text-center">Welcome {{user.get_username}}</h1>
+        </div>
+     </div>
+  </div>
+  {% endblock %}
