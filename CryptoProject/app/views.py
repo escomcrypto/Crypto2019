@@ -175,7 +175,7 @@ def generate_RSA_keys(id):
     prikey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+id+'_private.pem', 'wb')
     prikey_file.write(private_key)
     public_key = key.publickey().export_key()
-    pubkey_file = open(BASE_DIR+'\\keys\\users\\'id+'_public.pem', 'wb')
+    pubkey_file = open(BASE_DIR+'\\keys\\users\\'+id+'_public.pem', 'wb')
     pubkey_file.write(public_key)
 
 def welcome(request):
