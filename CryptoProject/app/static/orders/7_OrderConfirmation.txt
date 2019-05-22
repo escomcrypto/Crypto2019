@@ -1,17 +1,13 @@
 2019-05-22
 
-ORDEN CONFIRMATION 
+Order Numbers: 7
 
-ORDER NUMBER: 7
+Order Details 
+	Order Date: 2019-05-22
+	User: HHZ
+	Order Name: My girlfriend
+	Description: I want a portrait of the most precious girl
 
-ORDER DETAILS 
-	ORDER DATE: 2019-05-22
-	USER: ivann
-	ORDER NAME: new test 3
-	DESCRIPTION: test 3 ggg
+	Delivery Date: 2019-06-21
 
-DELIVERY 
-	DELIVERY DATE: 2019-06-21
-
-COST 
-	TOTAL COST: $190.00 
+	Total Cost: $185.00 

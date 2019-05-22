@@ -3,6 +3,11 @@ import os
 
 from io import BytesIO
 from datetime import datetime
+from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+from reportlab.platypus import Table
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from app.models import PaintingRequest
@@ -56,7 +61,6 @@ def client_login_required(view_func):
 
 def home(request):
     if request.method == 'POST':
-        print('reading method post')
         # Create a form instance and populated with data from request:
         authentication_form = LoginAuthenticationForm(request.POST)
         # Check whether it's valid:
@@ -68,7 +72,7 @@ def home(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect('register')
+                    return HttpResponseRedirect('welcome')
          
     form = LoginAuthenticationForm()
 
@@ -133,6 +137,8 @@ def ordersList(request):
             'year':datetime.now().year,
         })
 
+@paintor_login_required
+@login_required(login_url='/')
 def ordersPainter(request):
     result = PaintingRequest.objects.filter().values()
     return render(request, 
@@ -143,6 +149,8 @@ def ordersPainter(request):
             'year':datetime.now().year,
         })
 
+@client_login_required
+@login_required(login_url='/')
 def newOrder(request):
     dt=""
     dd=""
@@ -166,6 +174,8 @@ def newOrder(request):
         'year':datetime.now().year,
         })
 
+@paintor_login_required
+@login_required(login_url='/')
 def newDeliver(request):
     order = PaintingRequest.objects.filter(id=1).values()
     delivery = order[0]["dateRequest"].date() + timedelta(days=30)
@@ -178,7 +188,7 @@ def newDeliver(request):
         'delivery':delivery
         })
 
-@paintor_login_required
+@client_login_required
 @login_required(login_url='/')
 def welcome(request):
     return render(request,'app/mainClient.html',
@@ -187,6 +197,8 @@ def welcome(request):
         'year':datetime.now().year,
         })
 
+@paintor_login_required
+@login_required(login_url='/')
 def welcomePainter(request):
     return render(request,'app/mainPainter.html',
         {
@@ -308,28 +320,41 @@ def generate_RSA_keys(id):
 """         PDF Generation        """
 """==============================="""
 
-class OrdersGenerationPDF(View):
-    def header(self, pdf):
-        #We use the file logo_art.png
-        file_image = BASE_DIR + '\\app\\static\\images\\art_logo.png'
-        #We define the size of the image and its coordinates
-        pdf.drawImage(file_image, 40, 750, 120, 90, preserveAspectRatio=True)
-    
-    def get(self, request, *arg, **kwargs):
-        #We indicate the type of content to return (pdf)
+def generar_orden(request):
+    if request.method == 'GET':
+        order_id = request.GET.get('orderid')
+        username = request.GET.get('username')
+
         response = HttpResponse(content_type='application/pdf')
-        #The class io.BytesIO allow us to create an array as a file
+        pdf_name = "orders.pdf"
+        #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
         buffer = BytesIO()
+
+        '''Drawing pdf logo'''
         pdf = canvas.Canvas(buffer)
-        #Method were are the header data
-        self.header(pdf)
-        #With show page we end the page
+        logo_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\art.PNG'
+        pdf.drawImage(logo_image, 40, 680, 240, 180,preserveAspectRatio=True)
+        '''Order Content '''
+        #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+        pdf.setFont("Helvetica-Bold", 16)
+        #Dibujamos una cadena en la ubicación X,Y especificada
+        pdf.drawString(320, 760, u"Order Confirmation")
+
+        order = open(BASE_DIR + '\\CryptoProject\\app\\static\\orders\\' + str(order_id) + '_OrderConfirmation.txt', "r")
+        height = 660
+        width = 40
+        pdf.setFont("Helvetica-Bold", 12)
+
+        for line in order:
+            pdf.drawString(width, height, line.strip().encode())
+            height = height - 20
+
+        shopping_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\shopping.jpg'
+        pdf.drawImage(shopping_image, 330, 320, 250, 350, preserveAspectRatio=True)
+
         pdf.showPage()
         pdf.save()
         pdf = buffer.getvalue()
         buffer.close()
         response.write(pdf)
         return response
-
-
-

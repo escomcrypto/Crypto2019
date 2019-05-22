@@ -1,17 +1,13 @@
-2019-05-21
+2019-05-22
 
-ORDEN CONFIRMATION 
+Order Numbers: 6
 
-ORDER NUMBER: 6
+Order Details 
+	Order Date: 2019-05-22
+	User: HHZ
+	Order Name: My Dog Portrait
+	Description: I want to order a portrait of my dog
 
-ORDER DETAILS 
-	ORDER DATE: 2019-05-22
-	USER: mayrasho
-	ORDER NAME: hola
-	DESCRIPTION: crayola
+	Delivery Date: 2019-06-21
 
-DELIVERY 
-	DELIVERY DATE: 2019-06-20
-
-COST 
-	TOTAL COST: $157.00 
+	Total Cost: $244.00 

@@ -1,0 +1,13 @@
+2019-05-22
+
+Order Numbers: 3
+
+Order Details 
+	Order Date: 2019-05-22
+	User: eric
+	Order Name: My best fried
+	Description: I want a portrait of my best friend in the world and the most loyal, fluffy my Dog :D
+
+	Delivery Date: 2019-06-21
+
+	Total Cost: $194.00 
