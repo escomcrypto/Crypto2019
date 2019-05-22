@@ -7,14 +7,14 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
 class LoginAuthenticationForm(forms.Form):
-    email = forms.CharField(max_length=80,
+    username = forms.CharField(max_length=80,
                             label='',
                             required=True,
-                            widget=forms.EmailInput({
+                            widget=forms.TextInput({
                                 'id': 'signinId',
-                                'type': 'email',
+                                'type': 'text',
                                 'class': 'form-registration-input',
-                                'placeholder': 'Email',
+                                'placeholder': 'Username',
                                 }))
 
     password = forms.CharField(label='',

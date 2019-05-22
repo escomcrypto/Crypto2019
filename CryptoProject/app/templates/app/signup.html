@@ -22,13 +22,17 @@
     </div>
     <div class="row column align-center medium-5 large-4">
         <div class="form-registration">
-            <form data-abide novalidate class="form-registration-group" method="POST">
+            <form class="form-registration-group" method="POST">
+                {% csrf_token %}
                 <p class="or-divider"></p>
+                <!--
                 <a class="form-registration-facebook-button" href="#"><i class="fa fa-facebook-official" aria-hidden="true"></i> Sign Up With facebook</a>
                 <a class="form-registration-twitter-button" href="#"><i class="fa fa-twitter" aria-hidden="true"></i> Sign Up With Twitter</a>
                 <a class="form-registration-google-button" href="#"><i class="fa fa-google" aria-hidden="true"></i> Sign Up With Gmail</a>
-                <p class="or-divider"><span>or</span></p>
+                -->
                 <p class="form-registration-advice">Sign up with your email</p>
+                <p class="or-divider"></p>
+                
                 {{form}}
                 <p class="form-registration-terms"><a href="#">Terms &amp; Conditions</a>|<a href= {% static "policies/privacy_policy.txt"%}>Privacy</a></p>
                 <input class="form-registration-submit-button" type="submit" value="Sign Up">
