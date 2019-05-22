@@ -7,6 +7,9 @@ from reportlab.pdfgen import canvas
 
 from app.models import PaintingRequest
 
+import random
+from datetime import timedelta
+
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA384
@@ -134,36 +137,22 @@ def ordersList(request):
             'year':datetime.now().year,
         })
 
-@client_login_required
-@login_required(login_url='/')
-def addRequest(request):
-    '''PaintingRequest.objects.create(
-        nameRequest=request.POST["nameRequest"],
-        username="mayrasho",
-        dateRequest=datetime.now().date,
-        description=request.POST["description"],
-        image=request.POST["image"],
-        status="O"
-    )'''
-    print(request.FILES)
-    return render(request,'orders',
-        {
-        'title':'Orders',
-        'year':datetime.now().year,
-        })
-
-@client_login_required
-@login_required(login_url='/')
 def newOrder(request):
+    dt = ""
     if request.method == "POST":
+        dt = datetime.now()
         var = PaintingRequest(nameRequest=request.POST["nameRequest"],
         username="mayrasho",
-        dateRequest=datetime.now().date(),
+        dateRequest=dt,
         description=request.POST["description"],
         image=request.FILES["image"],
-        status='O',)
+        status='O',
+        cost=random.randint(150,250))
+        dateDelevery = dt.date() + timedelta(days=30)
+        print(dateDelevery)
         var.save()
-    print(request.FILES)
+        getOrder(dt)
+
     return render(request,'app/newOrder.html',
         {
         'title':'New Request',
@@ -179,6 +168,12 @@ def welcome(request):
         'year':datetime.now().year,
         })
 
+def getOrder(dateTime):
+    order = PaintingRequest.objects.filter(dateRequest=dateTime, username="mayrasho").values()
+    generate_iv(order[0]["id"])
+    generate_key(order[0]["id"])
+    encrypt_image(order[0]["id"], BASE_DIR + "\\CryptoProject\\app\\static\\images\\" + order[0]["image"].replace("/","\\"))
+    
 def writeBinFile(file_bytes, file_name):
     """write a binary file in base64"""
     file = open(file_name, 'wb')
@@ -207,45 +202,45 @@ def build_image(image_name, image_bytes):
 def generate_key(id):
     """generate a random key of 128 bits and store it in a file in base64"""
     key = get_random_bytes(16)
-    writeBinFile(key, BASE_DIR + '/keys/orders/' + str(id) + '_key.bin')
+    writeBinFile(key, BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
     
 def generate_iv(id):
     """generate a random iv of 128 bits and store it in a file in base64"""
     iv = get_random_bytes(16)
-    writeBinFile(iv, BASE_DIR + '/keys/orders/' + str(id) + '_iv.bin')
+    writeBinFile(iv, BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
 
 def encrypt_image(id, image_file_name):
     """encrypt and store the client photo"""
     image_bytes = get_image_bytes(image_file_name)
-    key = readBinFile(BASE_DIR + '/keys/orders/' + str(id) + '_key.bin')
-    iv = readBinFile(BASE_DIR + '/keys/orders/' + str(id) + '_iv.bin')
+    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
+    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
     
     #build an AES cipher using OFB mode
     cipher = AES.new(key, AES.MODE_OFB, iv)
     #encrypt the images bytes
     cipher_image_bytes = cipher.encrypt(image_bytes)
-    writeBinFile(cipher_image_bytes, BASE_DIR + '/app/static/images/originals/' + str(id) + '.bin')
+    writeBinFile(cipher_image_bytes, BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '.bin')
 
 def decrypt_image(id):
     """read and decrypt the client photo"""
-    cipher_image = readBinFile(BASE_DIR + '/app/static/images/originals/' + str(id) + '.bin')
-    key = readBinFile(BASE_DIR + '/keys/orders/' + str(id) + '_key.bin')
-    iv = readBinFile(BASE_DIR + '/keys/orders/' + str(id) + '_iv.bin')
+    cipher_image = readBinFile(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '.bin')
+    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
+    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
     
     #build an AES cipher using OFB mode
     cipher = AES.new(key, AES.MODE_OFB, iv)
     #decrypt the cipher images bytes
     plain_image_bytes = cipher.decrypt(cipher_image)
-    build_image(BASE_DIR + '/app/static/images/originals/' + str(id) + '_decrypted.jpg', plain_image_bytes)
+    build_image(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '_decrypted.jpg', plain_image_bytes)
 
 def generate_RSA_keys(id):
     """generate a RSA key pair and stored in .pem files"""
     key = RSA.generate(1024)
     private_key = key.export_key()
-    prikey_file = open(BASE_DIR + '/keys/users/' + str(id) + '_private.pem', 'wb')
+    prikey_file = open(BASE_DIR + '\\CryptoProject\\keys\\users\\' + id + '_private.pem', 'wb')
     prikey_file.write(private_key)
     public_key = key.publickey().export_key()
-    pubkey_file = open(BASE_DIR + '/keys/users/' + str(id) + '_public.pem', 'wb')
+    pubkey_file = open(BASE_DIR + '\\keys\\users\\'+id+'_public.pem', 'wb')
     pubkey_file.write(public_key)
 
 """==============================="""
@@ -275,6 +270,9 @@ class OrdersGenerationPDF(View):
         response.write(pdf)
         return response
 
-
-
-
+def welcome(request):
+    return render(request,'app/mainClient.html',
+        {
+        'title':'welcome',
+        'year':datetime.now().year,
+        })

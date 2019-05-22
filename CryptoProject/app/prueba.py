@@ -1,5 +1,6 @@
 import base64
 import os
+from datetime import datetime
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA384
@@ -99,7 +100,26 @@ def verifying_process(user_id, order_id):
     except (ValueError, TypeError):
         print("The signature is not valid")
 
+def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
+    oc = '' #text for the order confirmation
+    oc = oc + str(datetime.now().date()) + '\n\n'
+    oc = oc + 'ORDEN CONFIRMATION \n\n'
+    oc = oc + 'ORDER NUMBER: ' + str(order_id) + '\n\n'
+    oc = oc + 'ORDER DETAILS \n'
+    oc = oc + '\tORDER DATE: ' + str(order_date) + '\n'
+    oc = oc + '\tUSER: ' + user_name + '\n'
+    oc = oc + '\tORDER NAME: ' + order_name + '\n'
+    oc = oc + '\tDESCRIPTION: ' + description + '\n\n'
+    oc = oc + 'DELIVERY \n'
+    oc = oc + '\tDELIVERY DATE: ' + str(delivery_date) + '\n\n'
+    oc = oc + 'COST \n'
+    oc = oc + '\tTOTAL COST: $'+ str(cost) + '.00 \n'
+    
+    order_confirmation_file = open(BASE_DIR+'/app/static/orders/'+str(order_id)+'_OrderConfirmation.txt','w')
+    order_confirmation_file.write(oc)
+
 if __name__ == '__main__':
+    """
     generate_key(1)
     generate_iv(1)
     encrypt_image(1,BASE_DIR+'/app/static/images/originals/mensaje.jpg')
@@ -107,3 +127,5 @@ if __name__ == '__main__':
     generate_RSA_keys(2)
     #signing_process(2, 2)
     verifying_process(2, 2)
+    """
+    build_order_confirmation(123, 'Victor Nolasco', 'My first portrait', 'I want a colorfull portrait', 543, 543, 250)
