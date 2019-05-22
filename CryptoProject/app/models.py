@@ -15,8 +15,7 @@ class PaintingRequest(models.Model):
     image = models.ImageField(upload_to="originals", default="") #In this field the url of the image was stored
     REQUEST_STATUS = (
         ('C', 'In creation'),
-        ('O', 'Waiting for the painter acceptance'),
-        ('R', 'Rejected'),
+        ('D', 'Delivered'),
     )
     status = models.CharField(max_length=1, choices=REQUEST_STATUS)
     cost = models.IntegerField(default=0)
