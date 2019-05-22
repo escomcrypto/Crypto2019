@@ -168,11 +168,14 @@ def newOrder(request):
 
 def newDeliver(request):
     order = PaintingRequest.objects.filter(id=1).values()
+    delivery = order[0]["dateRequest"].date() + timedelta(days=30)
+    print(order[0]["description"])
     return render(request,'app/newDeliver.html',
         {
         'order':order,
         'title':'New Deliver',
         'year':datetime.now().year,
+        'delivery':delivery
         })
 
 @paintor_login_required
