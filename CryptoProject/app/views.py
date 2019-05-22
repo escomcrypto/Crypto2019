@@ -137,8 +137,9 @@ def ordersList(request):
             'year':datetime.now().year,
         })
 
+@paintor_login_required
+@login_required(login_url='/')
 def ordersPainter(request):
-    dates=[]
     result = PaintingRequest.objects.filter().values()
     return render(request, 
         'app/ordersPainter.html', 
@@ -173,6 +174,17 @@ def newOrder(request):
         'year':datetime.now().year,
         })
 
+@paintor_login_required
+@login_required(login_url='/')
+def newDeliver(request):
+    order = PaintingRequest.objects.filter(id=1).values()
+    return render(request,'app/newDeliver.html',
+        {
+        'order':order,
+        'title':'New Deliver',
+        'year':datetime.now().year,
+        })
+
 @client_login_required
 @login_required(login_url='/')
 def welcome(request):
@@ -182,6 +194,8 @@ def welcome(request):
         'year':datetime.now().year,
         })
 
+@paintor_login_required
+@login_required(login_url='/')
 def welcomePainter(request):
     return render(request,'app/mainPainter.html',
         {

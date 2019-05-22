@@ -1,20 +1,13 @@
   {% extends "app/layout.html" %}
   {% block links %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  {% endblock %}
-      {% block nav %}
-          <nav class="hover-underline-menu" data-menu-underline-from-center>
-              <ul class="menu align-center">
-                    <li> <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="120" height="20">
-                    </li>
-                    <li><a href="welcomePainter">Home</a></li>
-                    <li><a href="ordersPainter">Orders</a></li>
-              </ul>
-          </nav>
-      {% endblock %}
-      
+  {% endblock %}      
       {% block content %}
-      {% block button %}{% endblock %}
+      {% block button %}
+      <div class="text-center">
+          <button type="button" class="btn btn-dark align-center" onclick="location.href='newOrder'">New Order</button>
+        </div>
+      {% endblock %}
     </br>
     <div class="container">
       <div class="card">
@@ -43,6 +36,11 @@
                   <a href="order_generated_pdf?orderid={{r.id}}">
                     <span class="glyphicon glyphicon-eye-open"></span>
                   </a>
+				  {% ifequal r.status "D" %}
+                  <a href="#">
+                    <span class="glyphicon glyphicon-picture"></span>
+                  </a>
+				 {% endifequal %}
                 </td>
               </tr>  
             {% endfor %}             
