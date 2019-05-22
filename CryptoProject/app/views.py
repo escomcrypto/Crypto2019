@@ -3,6 +3,11 @@ import os
 
 from io import BytesIO
 from datetime import datetime
+from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
+from reportlab.platypus import Table
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from app.models import PaintingRequest
@@ -240,39 +245,44 @@ def generate_RSA_keys(id):
     prikey_file = open(BASE_DIR + '\\CryptoProject\\keys\\users\\' + id + '_private.pem', 'wb')
     prikey_file.write(private_key)
     public_key = key.publickey().export_key()
-    pubkey_file = open(BASE_DIR + '\\keys\\users\\'+id+'_public.pem', 'wb')
+    pubkey_file = open(BASE_DIR + '\\keys\\users\\' + id + '_public.pem', 'wb')
     pubkey_file.write(public_key)
 
 """==============================="""
 """         PDF Generation        """
 """==============================="""
 
-class OrdersGenerationPDF(View):
-    def header(self, pdf):
-        #We use the file logo_art.png
-        file_image = BASE_DIR + '\\app\\static\\images\\art_logo.png'
-        #We define the size of the image and its coordinates
-        pdf.drawImage(file_image, 40, 750, 120, 90, preserveAspectRatio=True)
-    
-    def get(self, request, *arg, **kwargs):
-        #We indicate the type of content to return (pdf)
-        response = HttpResponse(content_type='application/pdf')
-        #The class io.BytesIO allow us to create an array as a file
-        buffer = BytesIO()
-        pdf = canvas.Canvas(buffer)
-        #Method were are the header data
-        self.header(pdf)
-        #With show page we end the page
-        pdf.showPage()
-        pdf.save()
-        pdf = buffer.getvalue()
-        buffer.close()
-        response.write(pdf)
-        return response
+def generar_orden(request):
+    response = HttpResponse(content_type='application/pdf')
+    pdf_name = "orders.pdf"
+    #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
+    buffer = BytesIO()
 
-def welcome(request):
-    return render(request,'app/mainClient.html',
-        {
-        'title':'welcome',
-        'year':datetime.now().year,
-        })
+    '''Drawing pdf logo'''
+    pdf = canvas.Canvas(buffer)
+    logo_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\art.PNG'
+    pdf.drawImage(logo_image, 40, 680, 240, 180,preserveAspectRatio=True)
+    '''Order Content '''
+    #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+    pdf.setFont("Helvetica-Bold", 16)
+    #Dibujamos una cadena en la ubicación X,Y especificada
+    pdf.drawString(320, 760, u"Confirmación de Pedido")
+
+    order = open(BASE_DIR + '\\CryptoProject\\app\\static\\orders\\123_OrderConfirmation.txt', "r")
+    height = 660
+    width = 40
+    pdf.setFont("Helvetica", 14)
+
+    for line in order:
+        pdf.drawString(width, height, line.strip().encode())
+        height = height - 20
+
+    shopping_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\shopping.jpg'
+    pdf.drawImage(shopping_image, 330, 320, 250, 350, preserveAspectRatio=True)
+
+    pdf.showPage()
+    pdf.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
