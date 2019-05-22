@@ -124,7 +124,7 @@ def register(request):
 def ordersList(request):
     orders = []
     #result = PaintingRequest.objects.filter(username=request.user.id).values()
-    result = PaintingRequest.objects.filter(username="mayrasho").values()
+    result = PaintingRequest.objects.filter(username=request.user.username).values()
     if(len(result) != 0):
         for r in range(0,len(result)):
             orders.append(result[r]['nameRequest'])
@@ -144,7 +144,7 @@ def newOrder(request):
     if request.method=="POST":
         dt = datetime.now()
         var = PaintingRequest(nameRequest=request.POST["nameRequest"],
-        username="mayrasho",
+        username=request.user.username,
         dateRequest=dt,
         description=request.POST["description"],
         image=request.FILES["image"],
@@ -153,7 +153,8 @@ def newOrder(request):
         )
         dd = dt.date() + timedelta(days=30)
         var.save()
-        getOrder(dt,dd)
+        getOrder(dt,dd,request)
+        request
     return render(request,'app/newOrder.html',
         {
         'title':'New Request',
@@ -169,11 +170,13 @@ def welcome(request):
         'year':datetime.now().year,
         })
 
-def getOrder(dateTime,delivery):
-    order = PaintingRequest.objects.filter(dateRequest=dateTime, username="mayrasho").values()
+def getOrder(dateTime,delivery,request):
+    order = PaintingRequest.objects.filter(dateRequest=dateTime, username=request.user.username).values()
     generate_iv(order[0]["id"])
     generate_key(order[0]["id"])
     encrypt_image(order[0]["id"], BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
+    #delete the original image after encryption
+    os.remove(BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
     build_order_confirmation(order[0]["id"],order[0]["username"],
     order[0]["nameRequest"],order[0]["description"],order[0]["dateRequest"],
     delivery,order[0]["cost"])
