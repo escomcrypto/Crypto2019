@@ -5,7 +5,7 @@
 <h1 class="text-center">{{title}}</h1>
 <p></p>
 <div class="container">
-        <form theme="simple" class="text-center" method="POST" enctype="multipart/form-data">
+        <form theme="simple" class="text-center" method="POST" enctype="multipart/form-data" name="form">
         {% csrf_token %}
         <div class="form-group row">
           <label for="nameRequest" class="col-sm-2 col-form-label text-left">Name Request:</label>
@@ -27,12 +27,18 @@
                         <input type="file" class="form-control-file" id="image" name="image">
                 </div>
         </div>
-        
-        <input type="submit" class="btn btn-dark" value="Finish"/>
+        <input class="btn-dark" type="submit" name="submit" value="Finish" disabled='disabled' />
         <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" name="TyC">
+                        <input class="form-check-input" type="checkbox" value="checkbox" id="check" name="terminos" onclick="activarcasilla()"/>
                         <label class="form-check-label" for="defaultCheck1">Agree to terms and conditions</label>
         </div>        
 </form>
+
 </div>
+<script>
+        function activarcasilla(){
+                        document.form.submit.disabled=!document.form.terminos.checked;
+                        
+        }
+</script>
 {% endblock %}

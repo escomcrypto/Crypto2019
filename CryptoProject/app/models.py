@@ -10,7 +10,7 @@ class PaintingRequest(models.Model):
     #username = models.ForeignKey(Usuario, on_delete=models.CASCADE, default="")
     username = models.CharField(max_length = 100)
     nameRequest = models.CharField(max_length = 100) #Name for the painting request
-    dateRequest = models.DateField() #Date on which the request was made 
+    dateRequest = models.DateTimeField() #Date on which the request was made 
     description = models.TextField()
     image = models.ImageField(upload_to="originals", default="") #In this field the url of the image was stored
     REQUEST_STATUS = (
