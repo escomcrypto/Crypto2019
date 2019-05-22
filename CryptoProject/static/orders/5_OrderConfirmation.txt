@@ -1,0 +1,13 @@
+2019-05-22
+
+Order Numbers: 5
+
+Order Details 
+	Order Date: 2019-05-22
+	User: Eric López
+	Order Name: My best friend
+	Description: A portrait of my dog :D
+
+	Delivery Date: 2019-06-21
+
+	Total Cost: $174.00 

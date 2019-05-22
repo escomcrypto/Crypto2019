@@ -18,5 +18,5 @@ urlpatterns = [path('', views.home, name='home'),
     path('orders', views.ordersList, name="orders"),
     path('welcome', views.welcome, name="welcome"),
     path('newOrder', views.newOrder, name="newOrder"),
-    path('order_generated_pdf/$', views.generar_orden, name='order_report_pdf'),
+    path('order_generated_pdf', views.generar_orden, name='order_report_pdf'),
     path('newOrder', views.newOrder, name="newOrder"),] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

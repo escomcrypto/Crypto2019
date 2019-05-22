@@ -118,6 +118,9 @@ def build_order_confirmation(order_id, user_name, order_name, description, order
     order_confirmation_file = open(BASE_DIR+'/app/static/orders/'+str(order_id)+'_OrderConfirmation.txt','w')
     order_confirmation_file.write(oc)
 
+def delete_image(image_file):
+    os.remove(BASE_DIR+'/app/static/images/originals/'+image_file)
+
 if __name__ == '__main__':
     """
     generate_key(1)
@@ -128,4 +131,5 @@ if __name__ == '__main__':
     #signing_process(2, 2)
     verifying_process(2, 2)
     """
-    build_order_confirmation(123, 'Victor Nolasco', 'My first portrait', 'I want a colorfull portrait', 543, 543, 250)
+    #build_order_confirmation(123, 'Victor Nolasco', 'My first portrait', 'I want a colorfull portrait', 543, 543, 250)
+    delete_image('bart.png')

@@ -61,7 +61,6 @@ def client_login_required(view_func):
 
 def home(request):
     if request.method == 'POST':
-        print('reading method post')
         # Create a form instance and populated with data from request:
         authentication_form = LoginAuthenticationForm(request.POST)
         # Check whether it's valid:
@@ -73,7 +72,7 @@ def home(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect('register')
+                    return HttpResponseRedirect('welcome')
          
     form = LoginAuthenticationForm()
 
@@ -108,6 +107,7 @@ def register(request):
                     new_user.is_superuser = False
                     new_user.is_staff = False
                     new_user.save()
+                    generate_RSA_keys(username)
                     return HttpResponseRedirect('/')
               
     form = RegistrationForm()
@@ -128,7 +128,7 @@ def register(request):
 def ordersList(request):
     orders = []
     #result = PaintingRequest.objects.filter(username=request.user.id).values()
-    result = PaintingRequest.objects.filter(username="mayrasho").values()
+    result = PaintingRequest.objects.filter(username=request.user.username).values()
     if(len(result) != 0):
         for r in range(0,len(result)):
             orders.append(result[r]['nameRequest'])
@@ -142,29 +142,32 @@ def ordersList(request):
             'year':datetime.now().year,
         })
 
+@client_login_required
+@login_required(login_url='/')
 def newOrder(request):
-    dt = ""
-    if request.method == "POST":
+    dt=""
+    dd=""
+    if request.method=="POST":
         dt = datetime.now()
         var = PaintingRequest(nameRequest=request.POST["nameRequest"],
-        username="mayrasho",
+        username=request.user.username,
         dateRequest=dt,
         description=request.POST["description"],
         image=request.FILES["image"],
         status='O',
-        cost=random.randint(150,250))
-        dateDelevery = dt.date() + timedelta(days=30)
-        print(dateDelevery)
+        cost=random.randint(150,250)
+        )
+        dd = dt.date() + timedelta(days=30)
         var.save()
-        getOrder(dt)
-
+        getOrder(dt,dd,request)
+        request
     return render(request,'app/newOrder.html',
         {
         'title':'New Request',
         'year':datetime.now().year,
         })
 
-@paintor_login_required
+@client_login_required
 @login_required(login_url='/')
 def welcome(request):
     return render(request,'app/mainClient.html',
@@ -173,12 +176,43 @@ def welcome(request):
         'year':datetime.now().year,
         })
 
-def getOrder(dateTime):
-    order = PaintingRequest.objects.filter(dateRequest=dateTime, username="mayrasho").values()
+def getOrder(dateTime,delivery,request):
+    order = PaintingRequest.objects.filter(dateRequest=dateTime, username=request.user.username).values()
     generate_iv(order[0]["id"])
     generate_key(order[0]["id"])
-    encrypt_image(order[0]["id"], BASE_DIR + "\\CryptoProject\\app\\static\\images\\" + order[0]["image"].replace("/","\\"))
+    encrypt_image(order[0]["id"], BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
+    #delete the original image after encryption
+    os.remove(BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
+    build_order_confirmation(order[0]["id"],order[0]["username"],
+    order[0]["nameRequest"],order[0]["description"],order[0]["dateRequest"],
+    delivery,order[0]["cost"])
+    signing_process(order[0]["username"],order[0]["id"])
+
+
+def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
+    oc = '' #text for the order confirmation
+    oc = oc + str(datetime.now().date()) + '\n\n'
+    oc = oc + 'Order Numbers: ' + str(order_id) + '\n\n'
+    oc = oc + 'Order Details \n'
+    oc = oc + '\tOrder Date: ' + str(order_date.date()) + '\n'
+    oc = oc + '\tUser: ' + user_name + '\n'
+    oc = oc + '\tOrder Name: ' + order_name + '\n'
+    oc = oc + '\tDescription: ' + description + '\n\n'
+    oc = oc + '\tDelivery Date: ' + str(delivery_date) + '\n\n'
+    oc = oc + '\tTotal Cost: $'+ str(cost) + '.00 \n'
     
+    order_confirmation_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt','w')
+    order_confirmation_file.write(oc)
+
+def signing_process(user_id, order_id):
+    """sign the order_confirmation"""
+    order_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt', 'r')
+    order = order_file.read().encode()  #encode cast string to bytes
+    private_key = RSA.import_key(open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+str(user_id)+'_private.pem').read())
+    h = SHA384.new(order)
+    signature = pkcs1_15.new(private_key).sign(h)
+    writeBinFile(signature, BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_signature.bin')
+
 def writeBinFile(file_bytes, file_name):
     """write a binary file in base64"""
     file = open(file_name, 'wb')
@@ -245,7 +279,7 @@ def generate_RSA_keys(id):
     prikey_file = open(BASE_DIR + '\\CryptoProject\\keys\\users\\' + id + '_private.pem', 'wb')
     prikey_file.write(private_key)
     public_key = key.publickey().export_key()
-    pubkey_file = open(BASE_DIR + '\\keys\\users\\' + id + '_public.pem', 'wb')
+    pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+id+'_public.pem', 'wb')
     pubkey_file.write(public_key)
 
 """==============================="""
@@ -253,36 +287,40 @@ def generate_RSA_keys(id):
 """==============================="""
 
 def generar_orden(request):
-    response = HttpResponse(content_type='application/pdf')
-    pdf_name = "orders.pdf"
-    #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
-    buffer = BytesIO()
+    if request.method == 'GET':
+        order_id = request.GET.get('orderid')
+        username = request.GET.get('username')
 
-    '''Drawing pdf logo'''
-    pdf = canvas.Canvas(buffer)
-    logo_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\art.PNG'
-    pdf.drawImage(logo_image, 40, 680, 240, 180,preserveAspectRatio=True)
-    '''Order Content '''
-    #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
-    pdf.setFont("Helvetica-Bold", 16)
-    #Dibujamos una cadena en la ubicación X,Y especificada
-    pdf.drawString(320, 760, u"Confirmación de Pedido")
+        response = HttpResponse(content_type='application/pdf')
+        pdf_name = "orders.pdf"
+        #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
+        buffer = BytesIO()
 
-    order = open(BASE_DIR + '\\CryptoProject\\app\\static\\orders\\123_OrderConfirmation.txt', "r")
-    height = 660
-    width = 40
-    pdf.setFont("Helvetica", 14)
+        '''Drawing pdf logo'''
+        pdf = canvas.Canvas(buffer)
+        logo_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\art.PNG'
+        pdf.drawImage(logo_image, 40, 680, 240, 180,preserveAspectRatio=True)
+        '''Order Content '''
+        #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+        pdf.setFont("Helvetica-Bold", 16)
+        #Dibujamos una cadena en la ubicación X,Y especificada
+        pdf.drawString(320, 760, u"Order Confirmation")
 
-    for line in order:
-        pdf.drawString(width, height, line.strip().encode())
-        height = height - 20
+        order = open(BASE_DIR + '\\CryptoProject\\app\\static\\orders\\' + str(order_id) + '_OrderConfirmation.txt', "r")
+        height = 660
+        width = 40
+        pdf.setFont("Helvetica-Bold", 12)
 
-    shopping_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\shopping.jpg'
-    pdf.drawImage(shopping_image, 330, 320, 250, 350, preserveAspectRatio=True)
+        for line in order:
+            pdf.drawString(width, height, line.strip().encode())
+            height = height - 20
 
-    pdf.showPage()
-    pdf.save()
-    pdf = buffer.getvalue()
-    buffer.close()
-    response.write(pdf)
-    return response
+        shopping_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\shopping.jpg'
+        pdf.drawImage(shopping_image, 330, 320, 250, 350, preserveAspectRatio=True)
+
+        pdf.showPage()
+        pdf.save()
+        pdf = buffer.getvalue()
+        buffer.close()
+        response.write(pdf)
+        return response
