@@ -94,13 +94,16 @@ def newOrder(request):
         status='O',
         )
         var.save()
-    print (request.FILES)
     return render(request,'app/newOrder.html',
         {
         'title':'New Request',
         'year':datetime.now().year,
         }
     )
+
+def getOrder(id_pedido):
+    order = PaintingRequest.object.filter(id=id_pedido).values()
+    
 
 def welcome(request):
     return render(request,'app/mainClient.html',
