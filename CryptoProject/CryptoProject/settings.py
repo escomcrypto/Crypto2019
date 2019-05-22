@@ -115,7 +115,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 
-# Media files (PDF, txt, more)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['media']))
-
+MEDIA_URL ='/media/'
+MEDIA_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static/images']))
