@@ -203,17 +203,14 @@ def getOrder(dateTime,delivery,request):
 def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
     oc = '' #text for the order confirmation
     oc = oc + str(datetime.now().date()) + '\n\n'
-    oc = oc + 'ORDEN CONFIRMATION \n\n'
-    oc = oc + 'ORDER NUMBER: ' + str(order_id) + '\n\n'
-    oc = oc + 'ORDER DETAILS \n'
-    oc = oc + '\tORDER DATE: ' + str(order_date.date()) + '\n'
-    oc = oc + '\tUSER: ' + user_name + '\n'
-    oc = oc + '\tORDER NAME: ' + order_name + '\n'
-    oc = oc + '\tDESCRIPTION: ' + description + '\n\n'
-    oc = oc + 'DELIVERY \n'
-    oc = oc + '\tDELIVERY DATE: ' + str(delivery_date) + '\n\n'
-    oc = oc + 'COST \n'
-    oc = oc + '\tTOTAL COST: $'+ str(cost) + '.00 \n'
+    oc = oc + 'Order Numbers: ' + str(order_id) + '\n\n'
+    oc = oc + 'Order Details \n'
+    oc = oc + '\tOrder Date: ' + str(order_date.date()) + '\n'
+    oc = oc + '\tUser: ' + user_name + '\n'
+    oc = oc + '\tOrder Name: ' + order_name + '\n'
+    oc = oc + '\tDescription: ' + description + '\n\n'
+    oc = oc + '\tDelivery Date: ' + str(delivery_date) + '\n\n'
+    oc = oc + '\tTotal Cost: $'+ str(cost) + '.00 \n'
     
     order_confirmation_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt','w')
     order_confirmation_file.write(oc)
