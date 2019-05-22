@@ -170,25 +170,26 @@ def encrypt_image(id, image_file_name):
 
 def decrypt_image(id):
     """read and decrypt the client photo"""
-    cipher_image = readBinFile(BASE_DIR+'/app/static/images/originals/'+str(id)+'.bin')
-    key = readBinFile(BASE_DIR+'/keys/orders/'+str(id)+'_key.bin')
-    iv = readBinFile(BASE_DIR+'/keys/orders/'+str(id)+'_iv.bin')
+    cipher_image = readBinFile(BASE_DIR+'\\CryptoProject\\app\\static\\images\\originals\\'+str(id)+'.bin')
+    key = readBinFile(BASE_DIR+'\\CryptoProject\\keys\\orders\\'+str(id)+'_key.bin')
+    iv = readBinFile(BASE_DIR+'\\CryptoProject\\keys\\orders\\'+str(id)+'_iv.bin')
     
     #build an AES cipher using OFB mode
     cipher = AES.new(key, AES.MODE_OFB, iv)
     #decrypt the cipher images bytes
     plain_image_bytes = cipher.decrypt(cipher_image)
-    build_image(BASE_DIR+'/app/static/images/originals/'+str(id)+'_decrypted.jpg', plain_image_bytes)
+    build_image(BASE_DIR+'\\CryptoProject\\app\\static\\images\\originals\\'+str(id)+'_decrypted.jpg', plain_image_bytes)
 
 def generate_RSA_keys(id):
     """generate a RSA key pair and stored in .pem files"""
     key = RSA.generate(1024)
     private_key = key.export_key()
-    prikey_file = open(BASE_DIR+'/keys/users/'+str(id)+'_private.pem', 'wb')
+    prikey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+str(id)+'_private.pem', 'wb')
     prikey_file.write(private_key)
     public_key = key.publickey().export_key()
-    pubkey_file = open(BASE_DIR+'/keys/users/'+str(id)+'_public.pem', 'wb')
+    pubkey_file = open(BASE_DIR+'\\keys\\users\\'+str(id)+'_public.pem', 'wb')
     pubkey_file.write(public_key)
+    
 def welcome(request):
     return render(request,'app/mainClient.html',
         {
