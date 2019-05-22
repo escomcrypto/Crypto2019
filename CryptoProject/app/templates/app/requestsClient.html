@@ -1,44 +1,54 @@
-{% extends "app/layout.html" %}
-{% block links %}
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-{% endblock %}
-  {% block content %}
-  </br>
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-        <h1 class="text-center">{{title}}</h1>
-        {% block button %}
-        <div class="text-center">
-          <button type="button" class="btn btn-dark align-center" onclick="location.href='newOrder'">New Request</button>
-        </div>
-        {% endblock %}
-        <table class="table-expand">
-          <thead>
-            <tr class="table-expand-row">
-              <th class="text-center" width="300">Name Request</th>
-              <th class="text-center" width="300">Date of the Request</th>
-              <th class="text-center" width="300">Status</th>
-              <th class="text-center" width="300">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-          {%for o in orders%}
-            <tr class="table-expand-row" data-open-details>
-              <td class="text-left">{{o}}</td>
-              <td class="text-left">11/07/2019</td>
-              <td class="text-left">Waiting for the painter acepptance</td>
-              <td class="text-left">
-                <a href="order_generated_pdf?orderid=4&username=Eric Alejandro">
-                  <span class="glyphicon glyphicon-eye-open"></span>
-                </a>
-              </td>
-            </tr>  
-          {% endfor %}             
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+  {% extends "app/layout.html" %}
+  {% block links %}
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   {% endblock %}
-
+      {% block nav %}
+          <nav class="hover-underline-menu" data-menu-underline-from-center>
+              <ul class="menu align-center">
+                    <li> <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="120" height="20">
+                    </li>
+                    <li><a href="welcomePainter">Home</a></li>
+                    <li><a href="ordersPainter">Orders</a></li>
+              </ul>
+          </nav>
+      {% endblock %}
+      
+      {% block content %}
+      {% block button %}{% endblock %}
+    </br>
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="text-center">{{title}}</h1>
+          <table class="table-expand">
+            <thead>
+              <tr class="table-expand-row">
+                <th class="text-center" width="300">Name Order</th>
+                <th class="text-center" width="300">Date of the Order</th>
+                <th class="text-center" width="300">Date of the Delivery</th>
+                <th class="text-center" width="300">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {%for r in result%}
+              <tr class="table-expand-row" data-open-details>
+                <td class="text-center">{{r.nameRequest}}</td>
+                <td class="text-center">{{r.dateRequest}}</td>
+                {% ifequal r.status "D" %}
+                <td class="text-center">Delivery</td>
+                {% else %}
+                <td class="text-center">In creation</td>
+                {% endifequal %}
+                <td class="text-center">
+                  <a href="order_generated_pdf?orderid={{r.id}}">
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                  </a>
+                </td>
+              </tr>  
+            {% endfor %}             
+            </tbody>
+          </table>
+        </div>
+      </div>
+	  {% endblock %}
+    </div>

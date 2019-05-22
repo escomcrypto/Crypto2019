@@ -117,7 +117,7 @@ def register(request):
     return render(request,
           'app/signup.html',
           {
-              'title':'Sign Up - Art',
+              'title':'Sign Up',
               'year':datetime.now().year,
               'form':form
           })
@@ -126,18 +126,24 @@ def register(request):
 @client_login_required
 @login_required(login_url='/')
 def ordersList(request):
-    orders = []
+
     #result = PaintingRequest.objects.filter(username=request.user.id).values()
     result = PaintingRequest.objects.filter(username=request.user.username).values()
-    if(len(result) != 0):
-        for r in range(0,len(result)):
-            orders.append(result[r]['nameRequest'])
-    else:
-        print("No hay pedidos")
     return render(request, 
         'app/requestsClient.html', 
         {
-            'orders':orders,
+            'result':result,
+            'title':'Orders',
+            'year':datetime.now().year,
+        })
+
+def ordersPainter(request):
+    dates=[]
+    result = PaintingRequest.objects.filter().values()
+    return render(request, 
+        'app/ordersPainter.html', 
+        {
+            'result':result,
             'title':'Orders',
             'year':datetime.now().year,
         })
@@ -154,7 +160,7 @@ def newOrder(request):
         dateRequest=dt,
         description=request.POST["description"],
         image=request.FILES["image"],
-        status='O',
+        status='C',
         cost=random.randint(150,250)
         )
         dd = dt.date() + timedelta(days=30)
@@ -163,7 +169,7 @@ def newOrder(request):
         request
     return render(request,'app/newOrder.html',
         {
-        'title':'New Request',
+        'title':'New Order',
         'year':datetime.now().year,
         })
 
@@ -172,9 +178,20 @@ def newOrder(request):
 def welcome(request):
     return render(request,'app/mainClient.html',
         {
-        'title':'welcome',
+        'title':'Welcome',
         'year':datetime.now().year,
         })
+
+def welcomePainter(request):
+    return render(request,'app/mainPainter.html',
+        {
+        'title':'Welcome',
+        'year':datetime.now().year,
+        })
+
+"""==============================="""
+"""       Functions System        """
+"""==============================="""
 
 def getOrder(dateTime,delivery,request):
     order = PaintingRequest.objects.filter(dateRequest=dateTime, username=request.user.username).values()

@@ -1,0 +1,51 @@
+{% extends "app/layout.html" %}
+{% block links %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock %}
+
+{% block nav %}
+<nav class="hover-underline-menu" data-menu-underline-from-center>
+    <ul class="menu align-center">
+          <li> <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="120" height="20">
+          </li>
+          <li><a href="welcomePainter">Home</a></li>
+          <li><a href="ordersPainter">Orders</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+  {% block content %}
+  </br>
+  <div class="container align-center">
+    <div class="card align-center">
+      <div class="card-body align-center">
+        <h1 class="text-center">{{title}}</h1>
+        {% block button %}
+        {% endblock %}
+        <table class="table-expand">
+          <thead>
+            <tr class="table-expand-row">
+              <th class="text-center" width="400">Name Order</th>
+              <th class="text-center" width="400">Date of the Order</th>
+              <th class="text-center" width="400">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {%for r in result%}
+            <tr class="table-expand-row" data-open-details>
+              <td class="text-center">{{r.nameRequest}}</td>
+              <td class="text-center">{{r.dateRequest}}</td>
+              <td class="text-center">
+                <a href="#">
+                    <span class="glyphicon glyphicon-edit"></span>
+                  </a>
+              </td>
+            </tr>  
+          {% endfor %}             
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+
