@@ -139,8 +139,9 @@ def ordersList(request):
         })
 
 def newOrder(request):
-    dt = ""
-    if request.method == "POST":
+    dt=""
+    dd=""
+    if request.method=="POST":
         dt = datetime.now()
         var = PaintingRequest(nameRequest=request.POST["nameRequest"],
         username="mayrasho",
@@ -148,12 +149,11 @@ def newOrder(request):
         description=request.POST["description"],
         image=request.FILES["image"],
         status='O',
-        cost=random.randint(150,250))
-        dateDelevery = dt.date() + timedelta(days=30)
-        print(dateDelevery)
+        cost=random.randint(150,250)
+        )
+        dd = dt.date() + timedelta(days=30)
         var.save()
-        getOrder(dt)
-
+        getOrder(dt,dd)
     return render(request,'app/newOrder.html',
         {
         'title':'New Request',
@@ -169,12 +169,33 @@ def welcome(request):
         'year':datetime.now().year,
         })
 
-def getOrder(dateTime):
+def getOrder(dateTime,delivery):
     order = PaintingRequest.objects.filter(dateRequest=dateTime, username="mayrasho").values()
     generate_iv(order[0]["id"])
     generate_key(order[0]["id"])
-    encrypt_image(order[0]["id"], BASE_DIR + "\\CryptoProject\\app\\static\\images\\" + order[0]["image"].replace("/","\\"))
+    encrypt_image(order[0]["id"], BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
+    build_order_confirmation(order[0]["id"],order[0]["username"],
+    order[0]["nameRequest"],order[0]["description"],order[0]["dateRequest"],
+    delivery,order[0]["cost"])
+
+def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
+    oc = '' #text for the order confirmation
+    oc = oc + str(datetime.now().date()) + '\n\n'
+    oc = oc + 'ORDEN CONFIRMATION \n\n'
+    oc = oc + 'ORDER NUMBER: ' + str(order_id) + '\n\n'
+    oc = oc + 'ORDER DETAILS \n'
+    oc = oc + '\tORDER DATE: ' + str(order_date.date()) + '\n'
+    oc = oc + '\tUSER: ' + user_name + '\n'
+    oc = oc + '\tORDER NAME: ' + order_name + '\n'
+    oc = oc + '\tDESCRIPTION: ' + description + '\n\n'
+    oc = oc + 'DELIVERY \n'
+    oc = oc + '\tDELIVERY DATE: ' + str(delivery_date) + '\n\n'
+    oc = oc + 'COST \n'
+    oc = oc + '\tTOTAL COST: $'+ str(cost) + '.00 \n'
     
+    order_confirmation_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt','w')
+    order_confirmation_file.write(oc)
+
 def writeBinFile(file_bytes, file_name):
     """write a binary file in base64"""
     file = open(file_name, 'wb')
