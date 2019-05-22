@@ -103,6 +103,7 @@ def register(request):
                     new_user.is_superuser = False
                     new_user.is_staff = False
                     new_user.save()
+                    generate_RSA_keys(username)
                     return HttpResponseRedirect('/')
               
     form = RegistrationForm()
@@ -240,7 +241,7 @@ def generate_RSA_keys(id):
     prikey_file = open(BASE_DIR + '\\CryptoProject\\keys\\users\\' + id + '_private.pem', 'wb')
     prikey_file.write(private_key)
     public_key = key.publickey().export_key()
-    pubkey_file = open(BASE_DIR+'\\keys\\users\\'+id+'_public.pem', 'wb')
+    pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+id+'_public.pem', 'wb')
     pubkey_file.write(public_key)
 
 """==============================="""
@@ -269,6 +270,7 @@ class OrdersGenerationPDF(View):
         buffer.close()
         response.write(pdf)
         return response
+
 
 def welcome(request):
     return render(request,'app/mainClient.html',
