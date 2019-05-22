@@ -17,6 +17,8 @@ urlpatterns = [path('', views.home, name='home'),
     path('register/', views.register, name='register'),
     path('orders', views.ordersList, name="orders"),
     path('welcome', views.welcome, name="welcome"),
+    path('ordersPainter', views.ordersPainter, name="ordersPainter"),
+    path('welcomePainter', views.welcomePainter, name="welcomePainter"),
     path('newOrder', views.newOrder, name="newOrder"),
     path('order_generated_pdf/$', login_required(views.OrdersGenerationPDF.as_view()), name='order_report_pdf'),
     path('newOrder', views.newOrder, name="newOrder"),] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
