@@ -1,7 +1,7 @@
 """
 Definition of models.
 """
-
+from datetime import datetime
 from django.db import models
 from django.utils import timezone
 
@@ -19,6 +19,7 @@ class PaintingRequest(models.Model):
         ('R', 'Rejected'),
     )
     status = models.CharField(max_length=1, choices=REQUEST_STATUS)
+    cost = models.IntegerField(default=0)
 
 '''#Model for the AES keys
 class AES_keys(models.Model):

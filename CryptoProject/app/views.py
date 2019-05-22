@@ -1,5 +1,7 @@
 import base64
 import os
+import random
+from datetime import timedelta
 from Crypto.PublicKey import RSA
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA384
@@ -75,23 +77,6 @@ def ordersList(request):
             'year':datetime.now().year,
         })
 
-def addRequest(request):
-    '''PaintingRequest.objects.create(
-        nameRequest=request.POST["nameRequest"],
-        username="mayrasho",
-        dateRequest=datetime.now().date,
-        description=request.POST["description"],
-        image=request.POST["image"],
-        status="O"
-    )'''
-    print(request.FILES)
-    return render(request,'orders',
-        {
-        'title':'Orders',
-        'year':datetime.now().year,
-        }
-    )
-
 def newOrder(request):
     dt=""
     if request.method=="POST":
@@ -103,7 +88,10 @@ def newOrder(request):
         description=request.POST["description"],
         image=request.FILES["image"],
         status='O',
+        cost=random.randint(150,250)
         )
+        dateDelevery = dt.date() + timedelta(days=30)
+        print(dateDelevery)
         var.save()
         getOrder(dt)
     return render(request,'app/newOrder.html',

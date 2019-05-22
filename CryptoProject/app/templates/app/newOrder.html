@@ -24,10 +24,11 @@
         <div class="form-group row">
                 <label for="file" class="col-sm-2 col-form-label text-left">File:</label>
                 <div class="col-sm-10">
-                        <input type="file" class="form-control-file" id="image" name="image">
+                        <label class="custom-file-label form-control" for="image">Choose a image</label>
+                        <input type="file" name="image" class="custom-file-input form-control" accept="image/*" required="" id="image">
                 </div>
         </div>
-        <input class="btn-dark" type="submit" name="submit" value="Finish" disabled='disabled' />
+        <input class="btn btn-dark" type="submit" name="submit" value="Finish" disabled='disabled' />
         <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="checkbox" id="check" name="terminos" onclick="activarcasilla()"/>
                         <label class="form-check-label" for="defaultCheck1">Agree to terms and conditions</label>
@@ -37,8 +38,7 @@
 </div>
 <script>
         function activarcasilla(){
-                        document.form.submit.disabled=!document.form.terminos.checked;
-                        
+                        document.form.submit.disabled=!document.form.terminos.checked;              
         }
 </script>
 {% endblock %}
