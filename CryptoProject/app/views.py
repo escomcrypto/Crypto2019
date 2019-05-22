@@ -75,20 +75,40 @@ def ordersList(request):
             'year':datetime.now().year,
         })
 
-'''def addRequest(request):
-    return render(request,'app/newOrder.html',
-    {
-        'title':'New Request',
-        'year':datetime.now().year,
-    }
+def addRequest(request):
+    '''PaintingRequest.objects.create(
+        nameRequest=request.POST["nameRequest"],
+        username="mayrasho",
+        dateRequest=datetime.now().date,
+        description=request.POST["description"],
+        image=request.POST["image"],
+        status="O"
     )'''
+    print(request.FILES)
+    return render(request,'orders',
+        {
+        'title':'Orders',
+        'year':datetime.now().year,
+        }
+    )
 
 def newOrder(request):
+    if request.method=="POST":
+        var = PaintingRequest(
+        nameRequest=request.POST["nameRequest"],
+        username="mayrasho",
+        dateRequest=datetime.now().date(),
+        description=request.POST["description"],
+        image=request.FILES["image"],
+        status='O',
+        )
+        var.save()
+    print (request.FILES)
     return render(request,'app/newOrder.html',
-    {
+        {
         'title':'New Request',
         'year':datetime.now().year,
-    }
+        }
     )
 
 def writeBinFile(file_bytes, file_name):
@@ -159,3 +179,10 @@ def generate_RSA_keys(id):
     public_key = key.publickey().export_key()
     pubkey_file = open(BASE_DIR+'/keys/users/'+str(id)+'_public.pem', 'wb')
     pubkey_file.write(public_key)
+def welcome(request):
+    return render(request,'app/mainClient.html',
+        {
+        'title':'welcome',
+        'year':datetime.now().year,
+        }
+    )
