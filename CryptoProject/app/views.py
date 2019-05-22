@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpRequest
 from app.models import PaintingRequest
 
-from .forms import LoginAuthenticationForm
+from .forms import LoginAuthenticationForm, RegistrationForm
 
 def home(request):
     if request.method == 'POST':
@@ -28,35 +28,43 @@ def home(request):
         })
 
 def register(request):
-      """Renders the register page """
-      assert isinstance(request, HttpRequest)
-      return render(request,
+    if request.method == 'POST':
+        print('reading method post')
+        # Create a form instance and populated with data from request:
+        authentication_form = RegistrationForm(request.POST)
+        # Check whether it's valid:
+        if authentication_form.is_valid():
+            return HttpResponseRedirect('home')
+
+    form = RegistrationForm()
+
+    """Renders the register page """
+    assert isinstance(request, HttpRequest)
+    return render(request,
           'app/signup.html',
           {
               'title':'Sign Up - Art',
               'year':datetime.now().year,
-          }
-          )
+              'form':form
+          })
     
 #In this view a list of requests that the user has made will be shown
 def ordersList(request):
-    orders=[]
+    orders = []
     #result = PaintingRequest.objects.filter(username=request.user.id).values()
     result = PaintingRequest.objects.filter(username="mayrasho").values()
-    if(len(result)!=0):
+    if(len(result) != 0):
         for r in range(0,len(result)):
             orders.append(result[r]['nameRequest'])
     else:
         print("No hay pedidos")
-    return render(
-        request, 
+    return render(request, 
         'app/requestsClient.html', 
         {
             'orders':orders,
             'title':'Orders',
             'year':datetime.now().year,
-        }
-    )
+        })
 
 def addRequest(request):
     '''PaintingRequest.objects.create(

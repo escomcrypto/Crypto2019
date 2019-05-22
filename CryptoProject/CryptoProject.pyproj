@@ -51,6 +51,7 @@
   <ItemGroup>
     <Folder Include="app\" />
     <Folder Include="app\migrations\" />
+    <Folder Include="app\media\" />
     <Folder Include="app\static\" />
     <Folder Include="app\static\css\" />
     <Folder Include="app\static\js\" />

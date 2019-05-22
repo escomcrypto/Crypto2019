@@ -11,7 +11,7 @@ class LoginAuthenticationForm(forms.Form):
                             label='',
                             required=True,
                             widget=forms.EmailInput({
-                                'id': 'email',
+                                'id': 'signinId',
                                 'type': 'email',
                                 'class': 'form-registration-input',
                                 'placeholder': 'Email',
@@ -20,10 +20,49 @@ class LoginAuthenticationForm(forms.Form):
     password = forms.CharField(label='',
                                required=True,
                                widget=forms.PasswordInput({
-                                    'id': 'password',
+                                    'id': 'signinPwd',
                                 'type': 'password',
                                 'class': 'form-registration-input',
                                 'placeholder': 'Password',
-                                'aria-describedby': "passwordField",
-                                'required': 'True',
                                     }))
+
+class RegistrationForm(forms.Form):
+    email = forms.CharField(max_length=80,
+                            label='',
+                            required=True,
+                            widget=forms.EmailInput({
+                                'id': 'signupId',
+                                'type': 'email',
+                                'class': 'form-registration-input',
+                                'placeholder': 'Email',
+                                }))
+
+    email_confirmation = forms.CharField(max_length=80,
+                            label='',
+                            required=True,
+                            widget=forms.EmailInput({
+                                'id': 'signupCId',
+                                'type': 'email',
+                                'class': 'form-registration-input',
+                                'placeholder': 'Email confirmation',
+                                }))
+
+    password = forms.CharField(label='',
+                               required=True,
+                               widget=forms.PasswordInput({
+                                    'id': 'signupPwd',
+                                'type': 'password',
+                                'class': 'form-registration-input',
+                                'placeholder': 'Password',
+                                    }))
+
+    username = forms.CharField(
+            label='',
+            required=True,
+            widget=forms.TextInput({
+                'id': 'signupUsr',
+                                'type': 'text',
+                                'class': 'form-registration-input',
+                                'placeholder': 'What\'s your name?',
+                })
+        )
