@@ -176,6 +176,8 @@ def getOrder(dateTime,delivery):
     build_order_confirmation(order[0]["id"],order[0]["username"],
     order[0]["nameRequest"],order[0]["description"],order[0]["dateRequest"],
     delivery,order[0]["cost"])
+    signing_process(order[0]["username"],order[0]["id"])
+
 
 def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
     oc = '' #text for the order confirmation
@@ -194,6 +196,15 @@ def build_order_confirmation(order_id, user_name, order_name, description, order
     
     order_confirmation_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt','w')
     order_confirmation_file.write(oc)
+
+def signing_process(user_id, order_id):
+    """sign the order_confirmation"""
+    order_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt', 'r')
+    order = order_file.read().encode()  #encode cast string to bytes
+    private_key = RSA.import_key(open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+str(user_id)+'_private.pem').read())
+    h = SHA384.new(order)
+    signature = pkcs1_15.new(private_key).sign(h)
+    writeBinFile(signature, BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_signature.bin')
 
 def writeBinFile(file_bytes, file_name):
     """write a binary file in base64"""
