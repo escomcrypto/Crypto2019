@@ -134,7 +134,6 @@ def ordersList(request):
         })
 
 def ordersPainter(request):
-    dates=[]
     result = PaintingRequest.objects.filter().values()
     return render(request, 
         'app/ordersPainter.html', 
@@ -164,6 +163,15 @@ def newOrder(request):
     return render(request,'app/newOrder.html',
         {
         'title':'New Order',
+        'year':datetime.now().year,
+        })
+
+def newDeliver(request):
+    order = PaintingRequest.objects.filter(id=1).values()
+    return render(request,'app/newDeliver.html',
+        {
+        'order':order,
+        'title':'New Deliver',
         'year':datetime.now().year,
         })
 
