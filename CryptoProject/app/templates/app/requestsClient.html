@@ -1,5 +1,7 @@
 {% extends "app/layout.html" %}
-
+{% block links %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock %}
   {% block content %}
   </br>
   <div class="container">
@@ -26,7 +28,11 @@
               <td class="text-left">{{o}}</td>
               <td class="text-left">11/07/2019</td>
               <td class="text-left">Waiting for the painter acepptance   </td>
-              <td class="text-left">Actionse</td>
+              <td class="text-left">
+                <a href="#">
+                  <span class="glyphicon glyphicon-eye-open"></span>
+                </a>
+              </td>
             </tr>  
           {% endfor %}             
           </tbody>
