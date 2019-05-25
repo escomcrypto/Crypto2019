@@ -189,15 +189,22 @@ def newOrder(request):
 @login_required(login_url='/')
 def newDeliver(request):
     order = PaintingRequest.objects.filter(id=1).values()
+<<<<<<< HEAD
 
 
 
 
+||||||| merged common ancestors
+=======
+    delivery = order[0]["dateRequest"].date() + timedelta(days=30)
+    print(order[0]["description"])
+>>>>>>> 6746f1d531dc8a859dafbc3f50b143bd5602876e
     return render(request,'app/newDeliver.html',
         {
         'order':order,
         'title':'New Deliver',
         'year':datetime.now().year,
+        'delivery':delivery
         })
 
 @client_login_required
