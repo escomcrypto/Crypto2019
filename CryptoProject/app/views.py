@@ -72,8 +72,11 @@ def home(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect('welcome')
-         
+                    if user.is_staff:
+                        return HttpResponseRedirect('welcomePainter')
+                    else:
+                        return HttpResponseRedirect('welcome')
+                    
     form = LoginAuthenticationForm()
 
     """Renders the home page."""
@@ -140,11 +143,19 @@ def ordersList(request):
 @paintor_login_required
 @login_required(login_url='/')
 def ordersPainter(request):
-    result = PaintingRequest.objects.filter().values()
+    orders = PaintingRequest.objects.filter().values()
+    orders_set = PaintingRequest.objects.filter().only('id','username')
+    verify = []
+    for order in orders_set:
+        order_username = order.username
+        order_id = order.id
+
+        if not(verifying_process(order_username, order_id)):
+            orders = orders.exclude(id=order_id)
     return render(request, 
         'app/ordersPainter.html', 
         {
-            'result':result,
+            'result':orders,
             'title':'Orders',
             'year':datetime.now().year,
         })
@@ -178,6 +189,10 @@ def newOrder(request):
 @login_required(login_url='/')
 def newDeliver(request):
     order = PaintingRequest.objects.filter(id=1).values()
+
+
+
+
     return render(request,'app/newDeliver.html',
         {
         'order':order,
@@ -269,6 +284,9 @@ def build_image(image_name, image_bytes):
     file.write(image_bytes) 
     file.close()
 
+    file = open(image_name, 'rb')
+    return file.read()
+
 def generate_key(id):
     """generate a random key of 128 bits and store it in a file in base64"""
     key = get_random_bytes(16)
@@ -291,7 +309,7 @@ def encrypt_image(id, image_file_name):
     cipher_image_bytes = cipher.encrypt(image_bytes)
     writeBinFile(cipher_image_bytes, BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '.bin')
 
-def decrypt_image(id):
+def decrypt_image(id, extension):
     """read and decrypt the client photo"""
     cipher_image = readBinFile(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '.bin')
     key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
@@ -301,7 +319,8 @@ def decrypt_image(id):
     cipher = AES.new(key, AES.MODE_OFB, iv)
     #decrypt the cipher images bytes
     plain_image_bytes = cipher.decrypt(cipher_image)
-    build_image(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '_decrypted.jpg', plain_image_bytes)
+    return plain_image_bytes
+     #build_image(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '_decrypted.'+ extension, plain_image_bytes)
 
 def generate_RSA_keys(id):
     """generate a RSA key pair and stored in .pem files"""
@@ -312,6 +331,41 @@ def generate_RSA_keys(id):
     public_key = key.publickey().export_key()
     pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+id+'_public.pem', 'wb')
     pubkey_file.write(public_key)
+
+
+def verifying_process(user_id, order_id):
+    """verifying"""
+    public_key = RSA.import_key(open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+str(user_id)+'_public.pem').read())
+    order_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt', 'r')
+    order = order_file.read().encode() #encode cast string to bytes
+    signature = readBinFile(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_signature.bin')
+    h = SHA384.new(order)
+    try:
+        pkcs1_15.new(public_key).verify(h, signature)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
+"""==============================="""
+"""         Image View            """
+"""==============================="""
+
+def viewOrder(request):
+    if request.method == 'GET':
+        order_id = request.GET.get('orderid')
+        #response = HttpResponse(content_type='text/plain')
+
+        order = PaintingRequest.objects.get(id=int(order_id))
+        name = str(order.image.name)
+        extension = name[(name.rfind('.')+1):]
+
+        original_image = decrypt_image(order_id, extension)
+        response = HttpResponse(original_image, content_type='image/'+extension)
+        response['Content-Disposition'] = 'attachment; filename=%s' % name[(name.rfind('/')+1):]
+
+        return response
+
 
 """==============================="""
 """         PDF Generation        """

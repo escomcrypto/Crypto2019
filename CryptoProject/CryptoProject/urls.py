@@ -19,6 +19,7 @@ urlpatterns = [path('', views.home, name='home'),
     path('ordersPainter', views.ordersPainter, name="ordersPainter"),
     path('welcomePainter', views.welcomePainter, name="welcomePainter"),
     path('newOrder', views.newOrder, name="newOrder"),
+    path('viewOrder', views.viewOrder, name="viewOrder"),
     path('order_generated_pdf', views.generar_orden, name='order_report_pdf'),
     path('newDeliver', views.newDeliver, name="newDeliver"),
     path('newOrder', views.newOrder, name="newOrder"),] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
