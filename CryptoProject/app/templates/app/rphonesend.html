@@ -1,0 +1,37 @@
+﻿<!doctype html>
+<html class="no-js" lang="es" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/css/foundation.min.css" integrity="sha256-xpOKVlYXzQ3P03j397+jWFZLMBXLES3IiryeClgU5og= sha384-gP4DhqyoT9b1vaikoHi9XQ8If7UNLO73JFOOlQV1RATrA7D0O7TjJZifac6NwPps sha512-AKwIib1E+xDeXe0tCgbc9uSvPwVYl6Awj7xl0FoaPFostZHOuDQ1abnDNCYtxL/HWEnVOMrFyf91TDgLPi9pNg==" crossorigin="anonymous">
+    <link rel="stylesheet" href={% static "css/app.css"%} />
+    <link rel="stylesheet" href={% static "css/login.css"%} />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body>
+    <div class="row column align-center medium-5 large-4">
+        <div class="header-logo">
+            <figure class="header-logo-img">
+                <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="380" height="220">
+                <figcaption class="form-registration-img-caption">"It's one thing to make a picture of what a person looks like, it's another thing to make a portrait of who they are."</figcaption>
+            </figure>
+        </div>
+    </div>
+    <div class="row column align-center medium-5 large-4">
+        <div class="form-registration">
+            {% block content %}
+            <form class="form-registration-group" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+                <p class="form-registration-advice">Please insert your phone number</p>
+                <input type="text" name="number" value="{{ object.number }}" {% if object.number %} disabled{% endif %} class='form-registration-input'>
+                <input class="form-registration-submit-button" type="submit" value="Send Code">
+                {% endblock %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

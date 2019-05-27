@@ -1,13 +1,13 @@
-2019-05-22
+2019-05-27
 
 Order Numbers: 2
 
 Order Details 
-	Order Date: 2019-05-22
-	User: eric
-	Order Name: My best fried
-	Description: I want a portrait of my best friend in the world and the most loyal, fluffy my Dog :D
+	Order Date: 2019-05-27
+	User: Mayra
+	Order Name: My Request
+	Description: This is my reque
 
-	Delivery Date: 2019-06-21
+	Delivery Date: 2019-06-26
 
-	Total Cost: $173.00 
+	Total Cost: $153.00 

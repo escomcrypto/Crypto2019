@@ -33,7 +33,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .forms import LoginAuthenticationForm, RegistrationForm
+from .forms import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
@@ -59,73 +59,21 @@ def client_login_required(view_func):
 """         Systems Views         """
 """==============================="""
 
-def home(request):
-    if request.method == 'POST':
-        # Create a form instance and populated with data from request:
-        authentication_form = LoginAuthenticationForm(request.POST)
-        # Check whether it's valid:
-        if authentication_form.is_valid():
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+class HomeView(View):
+    template_name = 'app/home.html'
+    context_name = 'Home Page'
 
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    if user.is_staff:
-                        return HttpResponseRedirect('welcomePainter')
-                    else:
-                        return HttpResponseRedirect('welcome')
-                    
-    form = LoginAuthenticationForm()
+    def get(self, request, format=None):
+        """Renders the home page"""
+        assert isinstance(request, HttpRequest)
+        return render(
+            request,
+            self.template_name,
+            {
+                'title':self.context_name,
+                })
 
-    """Renders the home page."""
-    assert isinstance(request, HttpRequest)
-    return render(request,
-        'app/signin.html',
-        {
-            'title':'Home Page',
-            'year':datetime.now().year,
-            'form':form
-        })
-
-def register(request):
-    if request.method == 'POST':
-        # Create a form instance and populated with data from request:
-        authentication_form = RegistrationForm(request.POST)
-        # Check whether it's valid:
-        if authentication_form.is_valid():
-            email = request.POST.get('email')
-            email_confirmation = request.POST.get('email_confirmation')
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-
-            if email == email_confirmation:
-                try:
-                    user = User.objects.get(username=username)
-                except User.DoesNotExist:
-                    user = None
-                if user is None:
-                    new_user = User.objects.create_user(username=username, email=email, password=password)
-                    new_user.is_superuser = False
-                    new_user.is_staff = False
-                    new_user.save()
-                    generate_RSA_keys(username)
-                    return HttpResponseRedirect('/')
-              
-    form = RegistrationForm()
-
-    """Renders the register page """
-    assert isinstance(request, HttpRequest)
-    return render(request,
-          'app/signup.html',
-          {
-              'title':'Sign Up',
-              'year':datetime.now().year,
-              'form':form
-          })
-    
-#In this view a list of requests that the user has made will be shown
+##In this view a list of requests that the user has made will be shown
 @client_login_required
 @login_required(login_url='/')
 def ordersList(request):
@@ -189,16 +137,8 @@ def newOrder(request):
 @login_required(login_url='/')
 def newDeliver(request):
     order = PaintingRequest.objects.filter(id=1).values()
-<<<<<<< HEAD
-
-
-
-
-||||||| merged common ancestors
-=======
     delivery = order[0]["dateRequest"].date() + timedelta(days=30)
-    print(order[0]["description"])
->>>>>>> 6746f1d531dc8a859dafbc3f50b143bd5602876e
+
     return render(request,'app/newDeliver.html',
         {
         'order':order,

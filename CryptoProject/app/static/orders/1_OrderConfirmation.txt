@@ -1,17 +1,13 @@
-2019-05-21
+2019-05-27
 
-ORDEN CONFIRMATION 
+Order Numbers: 1
 
-ORDER NUMBER: 123
+Order Details 
+	Order Date: 2019-05-27
+	User: Mayra
+	Order Name: My Request
+	Description: This is my request
 
-ORDER DETAILS 
-	ORDER DATE: 543
-	USER: Victor Nolasco
-	ORDER NAME: My first portrait
-	DESCRIPTION: I want a colorfull portrait
+	Delivery Date: 2019-06-26
 
-DELIVERY 
-	DELIVERY DATE: 543
-
-COST 
-	TOTAL COST: $250.00 
+	Total Cost: $163.00 

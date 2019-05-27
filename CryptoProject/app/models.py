@@ -1,6 +1,7 @@
 """
 Definition of models.
 """
+from django.contrib.auth.models import User
 from datetime import datetime
 from django.db import models
 from django.utils import timezone
@@ -19,14 +20,3 @@ class PaintingRequest(models.Model):
     )
     status = models.CharField(max_length=1, choices=REQUEST_STATUS)
     cost = models.IntegerField(default=0)
-
-'''#Model for the AES keys
-class AES_keys(models.Model):
-    order = models.ForeignKey(PaintingRequest, on_delete=models.CASCADE, default="", primary_key=True)
-    AES_key = models.CharField(max_length=500)
-    
-#Model for the RSA keys 
-class RSA_keys(models.Model): 
-    username = models.ForeignKey(Usuario, on_delete=models.CASCADE, default="")
-    private_key_A = models.CharField(max_length=500)
-    public_key_A = models.CharField(max_length=500)'''

@@ -16,7 +16,7 @@ class LoginAuthenticationForm(forms.Form):
                                 'class': 'form-registration-input',
                                 'placeholder': 'Username',
                                 }))
-
+ 
     password = forms.CharField(label='',
                                required=True,
                                widget=forms.PasswordInput({
@@ -56,13 +56,33 @@ class RegistrationForm(forms.Form):
                                 'placeholder': 'Password',
                                     }))
 
-    username = forms.CharField(
-            label='',
+    username = forms.CharField(label='',
             required=True,
             widget=forms.TextInput({
                 'id': 'signupUsr',
                                 'type': 'text',
                                 'class': 'form-registration-input',
                                 'placeholder': 'What\'s your name?',
-                })
-        )
+                }))
+
+    phone = forms.CharField(max_length=80,
+                            label='',
+                            required=True,
+                            widget=forms.TextInput({
+                                'id': 'phoneId',
+                                'type': 'tel',
+                                'pattern': '+[0-9]{12}',
+                                'class': 'form-registration-input',
+                                'placeholder': 'Phone Number',
+                                }))
+
+class RPhoneSendForm():
+    number = forms.CharField(max_length=80,
+                            label='',
+                            required=True,
+                            widget=forms.TextInput({
+                                'id': 'phoneId',
+                                'type': 'number',
+                                'class': 'form-registration-input',
+                                'placeholder': 'Phone Number',
+                                }))

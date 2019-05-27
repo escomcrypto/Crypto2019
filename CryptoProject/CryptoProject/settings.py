@@ -30,8 +30,9 @@ ALLOWED_HOSTS = []
 # Application references
 # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-INSTALLED_APPS
 INSTALLED_APPS = [
-    'app',
     # Add your apps here to enable them
+    'app',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -117,3 +118,7 @@ STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 
 MEDIA_URL ='/media/'
 MEDIA_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['app\\static\\images']))
+
+# .env
+NEXMO_API_KEY='c459213a'
+NEXMO_API_SECRET='SbP5REYo5vwhxdOD'

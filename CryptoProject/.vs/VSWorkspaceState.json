@@ -1,9 +1,14 @@
 {
   "ExpandedNodes": [
     "",
-    "\\cryptoenv",
-    "\\CryptoProject"
+    "\\app",
+    "\\app\\static\\css",
+    "\\cryptopenv\\Lib",
+    "\\cryptopenv\\Lib\\site-packages",
+    "\\cryptopenv\\Lib\\site-packages\\nexmo",
+    "\\CryptoProject",
+    "\\users"
   ],
-  "SelectedNode": "\\CryptoProject.sln",
+  "SelectedNode": "\\app\\views.py",
   "PreviewInSolutionExplorer": false
 }

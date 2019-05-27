@@ -6,6 +6,7 @@
     <RootNamespace>CryptoProject</RootNamespace>
     <InterpreterId>MSBuild|cryptopenv|$(MSBuildProjectFullPath)</InterpreterId>
     <IsWindowsApplication>False</IsWindowsApplication>
+    <SuppressPackageInstallationPrompt>True</SuppressPackageInstallationPrompt>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -36,6 +37,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="app\two_factor.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="app\forms.py" />
     <Compile Include="app\models.py" />
     <Compile Include="app\tests.py" />
@@ -70,8 +74,11 @@
     <Content Include="app\static\js\vendor\foundation.min.js" />
     <Content Include="app\static\js\vendor\jquery.js" />
     <Content Include="app\static\js\vendor\what-input.js" />
+    <Content Include="app\templates\app\home.html" />
     <Content Include="app\templates\app\signin.html" />
     <Content Include="app\templates\app\signup.html" />
+    <Content Include="app\templates\app\phoneverif.html" />
+    <Content Include="app\templates\app\rphonesend.html" />
     <Content Include="requirements.txt" />
     <Content Include="db.sqlite3" />
     <Content Include="app\templates\app\about.html" />
@@ -80,9 +87,6 @@
     <Content Include="app\templates\app\layout.html" />
     <Content Include="app\templates\app\login.html" />
     <Content Include="app\templates\app\loginpartial.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <InterpreterReference Include="CondaEnv|CondaEnv|cryptoenv" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="cryptopenv\">
