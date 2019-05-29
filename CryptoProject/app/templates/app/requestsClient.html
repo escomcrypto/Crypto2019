@@ -1,6 +1,7 @@
   {% extends "app/layout.html" %}
   {% block links %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   {% endblock %}      
       {% block content %}
     </br>
@@ -34,11 +35,11 @@
                 {% endifequal %}
                 <td class="text-center">
                   <a href="order_generated_pdf?orderid={{r.id}}">
-                    <span class="glyphicon glyphicon-eye-open"></span>
+                    <i class="far fa-file-pdf"></i>
                   </a>
 				  {% ifequal r.status "D" %}
                   <a href="#">
-                    <span class="glyphicon glyphicon-picture"></span>
+                    <i class="fas fa-file-download"></i>
                   </a>
 				 {% endifequal %}
                 </td>

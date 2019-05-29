@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block content %}
+</br>
+<h1 class="text-center">{{title}}</h1>
+<div class="container">
+        <form theme="simple" class="text-center" method="POST" enctype="multipart/form-data" name="form">
+        {% csrf_token %}
+        <div class="form-group row">
+                <label for="dateRequest" class="col-sm-2 col-form-label text-left">Date of the Delivery:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="dateDelivery" name="dateDelivery" value="{{delivery}}" disabled='enable'>
+                </div>
+        </div>
+
+        {%for o in order%}
+        <input type="hidden" name="orderid" value="{{o.id}}" />
+        <div class="form-group row">
+          <label for="nameRequest" class="col-sm-2 col-form-label text-left">Name Order:</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="nameRequest" name="nameRequest" value="{{o.nameRequest}}" disabled='enable'>
+          </div>
+        </div>
+
+        <div class="form-group row">
+                <label for="username" class="col-sm-2 col-form-label text-left">Username:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="username" name="username" value="{{o.username}}" disabled='enable'>
+                </div>
+        </div>
+
+        <div class="form-group row">
+                <label for="dateRequest" class="col-sm-2 col-form-label text-left">Date of the Order:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="dateRequest" name="dateRequest" value="{{o.dateRequest}}" disabled='enable'>
+                </div>
+        </div>
+
+        <div class="form-group row">
+                <label for="cost" class="col-sm-2 col-form-label text-left">Cost:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="cost" name="cost" value="${{o.cost}}.00" disabled='enable'>
+                </div>
+        </div>
+
+        <div class="form-group row">
+                <label for="description"  class="col-sm-2 col-form-label text-left">Description:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="description"  name="description" value ="Descripcion" disabled="enabled" rows="5">{{o.description}}</textarea>
+            </div>
+        </div>
+
+        <div class="form-group row">
+                <label for="file" class="col-sm-2 col-form-label text-left">Deliver:</label>
+                <div class="col-sm-10">
+                        <label class="custom-file-label form-control" for="image">Choose a image</label>
+                        <input type="file" name="image" class="custom-file-input form-control" accept="image/*" required="" id="image">
+                </div>
+        </div>
+        <input class="btn btn-dark" type="submit" name="submit" value="Finish" />  
+        {% endfor %}    
+</form>
+
+</div>
+{% endblock %}

@@ -44,9 +44,13 @@ class LoginView(View):
                 if user.is_active:
                     login(request, user)
                     if user.is_staff:
-                        return HttpResponseRedirect('/welcomePainter')
+                        return HttpResponseRedirect('welcomePainter')
                     else:
-                        return HttpResponseRedirect('/welcome')
+                        return HttpResponseRedirect('welcome')
+            else:
+                return HttpResponse('User is None')
+        else:
+            return HttpResponse('Form not valid')
 
         return render(request,
             self.template_name,

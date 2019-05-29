@@ -1,13 +1,13 @@
-2019-05-22
+2019-05-28
 
 Order Numbers: 5
 
 Order Details 
-	Order Date: 2019-05-22
-	User: Eric López
-	Order Name: My best friend
-	Description: A portrait of my dog :D
+	Order Date: 2019-05-29
+	User: Mayra
+	Order Name: Prueba2
+	Description: descripcion dos
 
-	Delivery Date: 2019-06-21
+	Delivery Date: 2019-06-27
 
-	Total Cost: $174.00 
+	Total Cost: $171.00 

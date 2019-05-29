@@ -33,7 +33,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError
 
-from .forms import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
@@ -41,7 +40,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 """Roles and Permissions functions"""
 """==============================="""
 
-# Paintor role tag
 pnt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and u.is_staff and u.is_active) else False, login_url='/')
 
 def paintor_login_required(view_func):
@@ -88,7 +86,7 @@ def ordersList(request):
             'year':datetime.now().year,
         })
 
-@paintor_login_required
+'''@paintor_login_required
 @login_required(login_url='/')
 def ordersPainter(request):
     orders = PaintingRequest.objects.filter().values()
@@ -106,13 +104,13 @@ def ordersPainter(request):
             'result':orders,
             'title':'Orders',
             'year':datetime.now().year,
-        })
+        })'''
+        
 
 @client_login_required
 @login_required(login_url='/')
 def newOrder(request):
     dt=""
-    dd=""
     if request.method=="POST":
         dt = datetime.now()
         var = PaintingRequest(nameRequest=request.POST["nameRequest"],
@@ -121,19 +119,18 @@ def newOrder(request):
         description=request.POST["description"],
         image=request.FILES["image"],
         status='C',
-        cost=random.randint(150,250)
+        cost=random.randint(150,250),
+        dateDelivery=dt.date() + timedelta(days=30)
         )
-        dd = dt.date() + timedelta(days=30)
         var.save()
-        getOrder(dt,dd,request)
-        request
+        getOrder(dt,request)
     return render(request,'app/newOrder.html',
         {
         'title':'New Order',
         'year':datetime.now().year,
         })
 
-@paintor_login_required
+'''@paintor_login_required
 @login_required(login_url='/')
 def newDeliver(request):
     order = PaintingRequest.objects.filter(id=1).values()
@@ -145,7 +142,7 @@ def newDeliver(request):
         'title':'New Deliver',
         'year':datetime.now().year,
         'delivery':delivery
-        })
+        })'''
 
 @client_login_required
 @login_required(login_url='/')
@@ -156,20 +153,12 @@ def welcome(request):
         'year':datetime.now().year,
         })
 
-@paintor_login_required
-@login_required(login_url='/')
-def welcomePainter(request):
-    return render(request,'app/mainPainter.html',
-        {
-        'title':'Welcome',
-        'year':datetime.now().year,
-        })
 
 """==============================="""
 """       Functions System        """
 """==============================="""
 
-def getOrder(dateTime,delivery,request):
+def getOrder(dateTime,request):
     order = PaintingRequest.objects.filter(dateRequest=dateTime, username=request.user.username).values()
     generate_iv(order[0]["id"])
     generate_key(order[0]["id"])
@@ -178,8 +167,8 @@ def getOrder(dateTime,delivery,request):
     os.remove(BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
     build_order_confirmation(order[0]["id"],order[0]["username"],
     order[0]["nameRequest"],order[0]["description"],order[0]["dateRequest"],
-    delivery,order[0]["cost"])
-    signing_process(order[0]["username"],order[0]["id"])
+    order[0]["dateDelivery"],order[0]["cost"])
+    #signing_process(order[0]["username"],order[0]["id"])
 
 
 def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
