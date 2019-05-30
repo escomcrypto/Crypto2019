@@ -164,3 +164,10 @@ def decrypt_image(id, extension, directory):
     #decrypt the cipher images bytes
     plain_image_bytes = cipher.decrypt(cipher_image)
     return plain_image_bytes
+
+
+# HTTP Error 404
+def handler404(request, exception, template_name="404.html"):
+    response = render_to_response("404.html")
+    response.status_code = 404
+    return response

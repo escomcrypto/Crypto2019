@@ -13,6 +13,7 @@ class PaintingRequest(models.Model):
     nameRequest = models.CharField(max_length = 100) #Name for the painting request
     dateRequest = models.DateTimeField() #Date on which the request was made 
     description = models.TextField()
+    signature = models.TextField()
     image = models.ImageField(upload_to="originals", default="") #In this field the url of the image was stored
     imageD = models.ImageField(upload_to="portraits", default="")
     REQUEST_STATUS = (

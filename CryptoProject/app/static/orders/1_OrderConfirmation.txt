@@ -1,13 +1,13 @@
-2019-05-28
+2019-05-30
 
 Order Numbers: 1
 
 Order Details 
-	Order Date: 2019-05-28
-	User: Mayra
-	Order Name: Prueba
-	Description: dhgvghjb
+	Order Date: 2019-05-30
+	User: Eric Alejandro
+	Order Name: My best friend
+	Description: My best friend portrait
 
-	Delivery Date: 2019-06-27
+	Delivery Date: 2019-06-29
 
-	Total Cost: $249.00 
+	Total Cost: $186.00 
