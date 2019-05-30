@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block links %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  
+{% endblock %}
+
+  {% block content %}
+  </br>
+  <div class="container align-center">
+    <div class="card align-center">
+      <div class="card-body align-center">
+        <h1 class="text-center">{{title}}</h1>
+        <table class="table-expand">
+          <thead>
+            <tr class="table-expand-row">
+              <th class="text-center" width="400">Name Order</th>
+              <th class="text-center" width="400">Date of the Order</th>
+              <th class="text-center" width="400">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {%for r in result%}
+            <tr class="table-expand-row" data-open-details>
+              <td class="text-center">{{r.nameRequest}}</td>
+              <td class="text-center">{{r.dateRequest}}</td>
+              <td class="text-center">
+                <a href="newDeliver?orderid={{r.id}}">
+                    <i class="fas fa-edit" title="Submit Delivery"></i>
+                </a>
+				        <a href="downloadImage?orderid={{r.id}}">
+                  <i class="fas fa-download" title="Download Original Image"></i>
+                </a>
+              </td>
+            </tr>  
+          {% endfor %}             
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+

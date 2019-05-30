@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block links %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+{% endblock %}
+
+{% block content %}
+</br>
+<div class="container">
+    <div class="card">
+      <div class="card-body align-items-center">
+        <h1 class="text-center">{{title}}</h1>
+            <h3 class="text-center">Original</h3>
+            <img src="data:image/{{mime}};base64,{{original}}" class="rounded mx-auto d-block img-thumbnail"/>
+            <h3 class="text-center">Portrait</h3>
+            <img src="data:image/{{mime2}};base64,{{portrait}}" class="rounded mx-auto d-block img-thumbnail"/>
+      </div>
+    </div>
+</div>
+{% endblock %}

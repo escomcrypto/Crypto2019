@@ -1,0 +1,252 @@
+{% extends "layoutClient.html" %}
+
+{% block content %}
+<p></p>
+<h1 class="text-center">{{title}}</h1>
+<p></p>
+<div class="container">
+    <form theme="simple" class="text-center" method="POST" enctype="multipart/form-data" name="form">
+        {% csrf_token %}
+        <div class="form-group row">
+            <label for="nameRequest" class="col-sm-2 col-form-label text-left">Name Request:</label>
+            <div class="col-sm-10">
+                <input type="nameRequest" class="form-control" id="nameRequest" name="nameRequest">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 col-form-label text-left">Description:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="description" name="description" rows="5"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="file" class="col-sm-2 col-form-label text-left">File:</label>
+            <div class="col-sm-10">
+                <label id="imagelabel" class="custom-file-label form-control" for="image">Choose a image</label>
+                <input type="file" name="image" class="custom-file-input form-control" accept="image/*" required="" id="image">
+                <div id="fileDisplayArea" style="margin-top: 2em; width: auto; overflow-x: auto; display:inline-block"></div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="Signature" class="col-sm-2 col-form-label text-left">Signature:</label>
+            <div class="col-sm-10">
+                <textarea type="signature" class="form-control" id="signature" name="signature" rows="5" disabled></textarea>
+            </div>
+        </div>
+
+        <div class="form-check" style="margin-top:20px;">
+            <input class="form-check-input" type="checkbox" value="checkbox" id="check" name="terminos" onclick="activarcasilla()" />
+            <label class="form-check-label" for="defaultCheck1">Agree to terms and conditions</label>
+        </div>
+        <br />
+        <input class="btn btn-dark" type="submit" name="submit" value="Finish" disabled='disabled' />
+        <br />
+        <br />
+    </form>
+
+    <form theme="simple" class="text-center" enctype="multipart/form-data" name="form2">
+        <div class="form-group row">
+            <label for="privateTextArea" class="col-sm-2 col-form-label text-left">Private Key PEM:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="privateTextArea" name="privateTextArea" rows="30" cols="63" disabled></textarea>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="fileKey" class="col-sm-2 col-form-label text-left">File Key:</label>
+            <div class="col-sm-10">
+                <label id="keylabel" class="custom-file-label form-control" for="image">Select your private key</label>
+                <input type="file" name="key" class="custom-file-input form-control" accept="application/octet-stream" id="key">
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function activarcasilla() {
+        document.form.submit.disabled = !document.form.terminos.checked;
+    }
+</script>
+<script>
+    /* ********************** */
+    /* FILE LOADING FUNCTIONS */
+    /* ********************** */
+    document.getElementById('image').addEventListener('change', handleImageSelect, false);
+    document.getElementById('key').addEventListener('change', handlePrivFileSelect, false);
+
+    function handleImageSelect(evt) {
+        var files = evt.target.files; // FileList object
+        // files is a FileList of File objects. List some properties.
+        for (var i = 0, f; f = files[i]; i++) {
+            var imageType = /image.*/;
+            if (f.type.match(imageType)) {
+                document.getElementById('imagelabel').innerHTML = f.name;
+                document.getElementById('signature').innerHTML = "";
+                var fileDisplayArea = document.getElementById('fileDisplayArea');
+                var reader = new FileReader();
+                reader.onload = function (evt) {
+                    fileDisplayArea.innerHTML = "";
+                    var img = new Image();
+                    img.src = reader.result;
+                    var arrayBuffer = img.src, array = new Uint8Array(arrayBuffer);
+                    console.log(array);
+                    signImage(array)
+                    fileDisplayArea.appendChild(img);
+                }
+                reader.readAsDataURL(f);
+            }
+            else {
+                fileDisplayArea.innerHTML = "File not supported!"
+            }
+        }
+        reader.onerror = function (evt) {
+            alert("Error reading file");
+        }
+    }
+
+    function handlePrivFileSelect(evt) {
+        var files = evt.target.files; // FileList object
+
+        // files is a FileList of File objects. List some properties.
+        txtresult = "";
+        for (var i = 0, f; f = files[i]; i++) {
+            //Label Setup
+            document.getElementById('keylabel').innerHTML = f.name;
+            var reader = new FileReader();
+            reader.readAsText(f, "UTF-8");
+            reader.onload = function (evt) {
+                //Cookie Setup
+                pem = evt.target.result;
+                document.getElementById('privateTextArea').innerHTML = pem;
+                deleteCookie('artprivk');
+                setCookie('artprivk', pem.replace(/(?:\r\n|\r|\n)/g, ':'));
+            }
+            reader.onerror = function (evt) {
+                alert("Error reading file");
+            }
+        }
+    }
+
+    /* *********************** */
+    /* RSA SIGNATURE FUNCTIONS */
+    /* *********************** */
+    function signImage(data) {
+        pem = document.getElementById('privateTextArea').innerHTML;
+        //Algorithm Object
+        var algorithmKeyGen = {
+            name: "RSASSA-PKCS1-v1_5",
+            // RsaHashedKeyGenParams
+            modulusLength: 2048,
+            publicExponent: new Uint8Array([0x01, 0x00, 0x01]), //Equivalent to 65537
+            hash: {
+                name: "SHA-256"
+            }
+        };
+
+        //Algorithm Sign
+        var algorithmSign = {
+            name: "RSASSA-PCKS1-v1_5"
+        };
+
+        //Key Import
+        window.crypto.subtle.importKey("pkcs8", pemToArrayBuffer(pem, '-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----')
+            , algorithmKeyGen, false, ["sign"]).then(
+                function (importedPrivateKey) {
+                    sign(importedPrivateKey, data);
+                })
+            .catch(function (err) {
+                console.error(err);
+            });
+    }
+
+    /* ************************ */
+    /* PEM CONVERTION FUNCTIONS */
+    /* ************************ */
+    function removeLines(str) {
+        return str.replace("\n", "");
+    }
+
+    function base64ToArrayBuffer(b64) {
+        var byteString = window.atob(b64);
+        var byteArray = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            byteArray[i] = byteString.charCodeAt(i);
+        }
+        return byteArray;
+    }
+
+    function pemToArrayBuffer(pem, header1, header2) {
+        var b64Lines = removeLines(pem);
+        var b64Prefix = b64Lines.replace(header1, '');
+        var b64Final = b64Prefix.replace(header2, '');
+        return base64ToArrayBuffer(b64Final);
+    }
+
+    /* ************** */
+    /* SIGN PROCEDURE */
+    /* ************** */
+    function sign(key, data) {
+        //Algorithm Sign
+        var algorithmSign = {
+            name: "RSASSA-PKCS1-v1_5"
+        };
+
+        var encrypt_promise = window.crypto.subtle.sign(algorithmSign, key, data);
+        encrypt_promise.then(
+            function (result_signature) {
+                signature = result_signature; //signature generated
+                var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(signature)));
+                console.log(base64String);
+                document.getElementById('signature').innerHTML = base64String;
+            },
+            function (e) {
+                alert("Error at signing!");
+                console.log(e);
+            }
+        );
+    }
+
+    /* *************************** */
+    /* COOKIE MANAGEMENT FUNCTIONS */
+    /* *************************** */
+    function loadCookie() {
+        var cname = 'artprivk';
+        text = document.getElementById('privateTextArea');
+        key = getCookie(cname).replace(/(:)/g, '\n');
+        if (!(key == "")) {
+            text.innerHTML = key;
+        }
+    }
+
+    function setCookie(cname, cvalue) {
+        var d = new Date();
+        d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function deleteCookie(cname) {
+        document.cookie = cname + "=;max-age=0;path=/";
+    }
+</script>
+{% endblock %}

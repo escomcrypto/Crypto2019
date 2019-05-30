@@ -1,0 +1,13 @@
+2019-05-28
+
+Order Numbers: 12
+
+Order Details 
+	Order Date: 2019-05-29
+	User: Vic
+	Order Name: Mi solicitud
+	Description: Una descripcion bien chida
+
+	Delivery Date: 2019-06-27
+
+	Total Cost: $250.00 

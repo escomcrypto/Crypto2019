@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href={% static "css/home_style.css" %} />
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css'>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.css">
+    {%block links%}{%endblock%}
+    <title>{{title}}</title>
+</head>
+<body>
+    <nav class="navbar is-fixed-top is-black">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item">
+                    <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="50">
+                </a>
+                <span class="navbar-burger burger" data-target="navbarMenuHeroB">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navbarMenuHeroB" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item is-active" href="/">
+                        <i class="fa fa-home" style="padding-right: 5px;"></i>Home
+                    </a>
+                    <a class="navbar-item" href="login">
+                        <i class="fas fa-sign-in-alt" style="padding-right: 4px;"></i>Sign In
+                    </a>
+                    <a class="navbar-item" href="register">
+                        <i class="fas fa-user-plus" style="padding-right: 4px;"></i>Sign Up
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <script type="text/javascript">
+        (function () {
+            var burger = document.querySelector('.burger');
+            var nav = document.querySelector('#' + burger.dataset.target);
+
+            burger.addEventListener('click', function () {
+                burger.classList.toggle('is-active');
+                nav.classList.toggle('is-active');
+            });
+        })();
+    </script>
+
+    <!--Start FLOW-->
+    <div class="block">
+        <div class="container">
+            <div id="flow">
+                <span class="flow-1"></span>
+                <span class="flow-2"></span>
+                <span class="flow-3"></span>
+            </div>
+        </div>
+    </div>
+    <!--END FLOW-->
+
+    <section class="section">
+        <div class="columns">
+            <div class="column is-4 is-offset-4">
+                <div class="block">
+                    <figure class="header-logo-img">
+                        <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="380" height="220">
+                        <figcaption class="form-registration-img-caption">"It's one thing to make a picture of what a person looks like, it's another thing to make a portrait of who they are."</figcaption>
+                    </figure>
+                </div>
+     {%block content%} {%endblock%}
+
+    <!-- Compressed JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- Remember me JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
+    <script>
+        $(function () {
+            if (localStorage.chkbox && localStorage.chkbox != '') {
+                $('#rememberChkBox').attr('checked', 'checked');
+                $('#signinId').val(localStorage.username);
+                $('#signinPwd').val(localStorage.pass);
+            } else {
+                $('#rememberChkBox').removeAttr('checked');
+                $('#signinId').val('');
+                $('#signinPwd').val('');
+            }
+
+            $('#rememberChkBox').click(function () {
+                console.log("checked")
+                if ($('#rememberChkBox').is(':checked')) {
+                    // save username and password
+                    localStorage.username = $('#signinId').val();
+                    localStorage.pass = $('#signinPwd').val();
+                    localStorage.chkbox = $('#rememberChkBox').val();
+                } else {
+                    localStorage.username = '';
+                    localStorage.pass = '';
+                    localStorage.chkbox = '';
+                }
+            });
+        });
+
+     </script>
+     {%block scripts%}{%endblock%}
+</body>
+</html>

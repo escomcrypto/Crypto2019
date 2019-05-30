@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     # Add your apps here to enable them
     'app',
     'users.apps.UsersConfig',
+    'painter.apps.PainterConfig',
+    'client.apps.ClientConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
