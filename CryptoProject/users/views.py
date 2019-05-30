@@ -48,9 +48,7 @@ class LoginView(View):
                     else:
                         return redirect('client:welcome')
             else:
-                return HttpResponse('User is None')
-        else:
-            return HttpResponse('Form not valid')
+                messages.add_message(request, messages.INFO,'Incorrect user and/or password.')
 
         return render(request,
             self.template_name,
