@@ -1,13 +1,12 @@
 ﻿{% extends "app/layoutArt.html" %}
      {%block content%}
-
                 <form method="post" action="login" id="loginform">
                     {% csrf_token %}
                     <div class="field">
                         <p class="control has-icons-left has-icons-right">
                             {{form.username}}
                             <span class="icon is-small is-left">
-                                <i class="fa fa-envelope" style="color: gray"></i>
+                                <i class="fas fa-user" style="color: gray"></i>
                         </p>
                     </div>
                     <div class="field">
@@ -22,7 +21,7 @@
                 <div class="level options" style="margin-top:10px">
                     <label class="checkbox" id="rememberChkBox">
                         <input type="checkbox">
-                        Remember me
+                        <strong>Remember me</strong>
                     </label>
                 </div>
                 <div class="block" style="align-content: center; width: 25%; margin: 0 auto">

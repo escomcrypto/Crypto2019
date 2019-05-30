@@ -33,18 +33,8 @@ class RegistrationForm(forms.Form):
                             widget=forms.EmailInput({
                                 'id': 'signupId',
                                 'type': 'email',
-                                'class': 'form-registration-input',
+                                'class': 'input is-info',
                                 'placeholder': 'Email',
-                                }))
-
-    email_confirmation = forms.CharField(max_length=80,
-                            label='',
-                            required=True,
-                            widget=forms.EmailInput({
-                                'id': 'signupCId',
-                                'type': 'email',
-                                'class': 'form-registration-input',
-                                'placeholder': 'Email confirmation',
                                 }))
 
     password = forms.CharField(label='',
@@ -52,7 +42,7 @@ class RegistrationForm(forms.Form):
                                widget=forms.PasswordInput({
                                     'id': 'signupPwd',
                                 'type': 'password',
-                                'class': 'form-registration-input',
+                                'class': 'input is-info',
                                 'placeholder': 'Password',
                                     }))
 
@@ -61,7 +51,7 @@ class RegistrationForm(forms.Form):
             widget=forms.TextInput({
                 'id': 'signupUsr',
                                 'type': 'text',
-                                'class': 'form-registration-input',
+                                'class': 'input is-info',
                                 'placeholder': 'What\'s your name?',
                 }))
 
@@ -72,7 +62,7 @@ class RegistrationForm(forms.Form):
                                 'id': 'phoneId',
                                 'type': 'tel',
                                 'pattern': '+[0-9]{12}',
-                                'class': 'form-registration-input',
+                                'class': 'input is-info',
                                 'placeholder': 'Phone Number',
                                 }))
 

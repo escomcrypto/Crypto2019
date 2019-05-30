@@ -2,13 +2,16 @@
   "ExpandedNodes": [
     "",
     "\\app",
+    "\\app\\static",
     "\\app\\static\\css",
+    "\\client",
+    "\\client\\templates",
     "\\cryptopenv\\Lib",
     "\\cryptopenv\\Lib\\site-packages",
-    "\\cryptopenv\\Lib\\site-packages\\nexmo",
-    "\\CryptoProject",
-    "\\users"
+    "\\cryptopenv\\Lib\\site-packages\\Crypto",
+    "\\painter",
+    "\\painter\\templates"
   ],
-  "SelectedNode": "\\app\\views.py",
+  "SelectedNode": "\\client\\templates\\requestsClient.html",
   "PreviewInSolutionExplorer": false
 }

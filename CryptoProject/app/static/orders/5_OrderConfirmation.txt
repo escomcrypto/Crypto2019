@@ -1,13 +1,13 @@
-2019-05-28
+2019-05-30
 
 Order Numbers: 5
 
 Order Details 
-	Order Date: 2019-05-29
-	User: Mayra
-	Order Name: Prueba2
-	Description: descripcion dos
+	Order Date: 2019-05-30
+	User: Eric Alejandro
+	Order Name: My Bestie
+	Description: I want a portrait of my bestie
 
-	Delivery Date: 2019-06-27
+	Delivery Date: 2019-06-29
 
-	Total Cost: $171.00 
+	Total Cost: $218.00 

@@ -1,44 +1,124 @@
-﻿{% extends "app/layoutArt.html" %}
-    {%block content%}
-            <form method="POST" id="loginform">
-                {% csrf_token %}
-                <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                        {{form.email}}
-                        <span class="icon is-small is-left">
-                            <i class="fa fa-envelope" style="color: gray"></i>
-                    </p>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href={% static "css/home_style.css" %} />
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css'>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.css">
+    <title>{{title}}</title>
+</head>
+<body>
+    <nav class="navbar is-fixed-top is-black">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item">
+                    <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="50">
+                </a>
+                <span class="navbar-burger burger" data-target="navbarMenuHeroB">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navbarMenuHeroB" class="navbar-menu">
+                <div class="navbar-end">
+                    <a class="navbar-item is-active" href="/">
+                        <i class="fa fa-home" style="padding-right: 5px;"></i>Home
+                    </a>
+                    <a class="navbar-item" href="login">
+                        <i class="fas fa-sign-in-alt" style="padding-right: 4px;"></i>Sign In
+                    </a>
+                    <a class="navbar-item" href="register">
+                        <i class="fas fa-user-plus" style="padding-right: 4px;"></i>Sign Up
+                    </a>
                 </div>
-                <div class="field">
-                    <p class="control has-icons-left has-icons-right">
-                        {{form.email_confimation}}
-                        <span class="icon is-small is-left">
-                            <i class="fa fa-envelope" style="color: gray"></i>
-                    </p>
+            </div>
+        </div>
+    </nav>
+    <script type="text/javascript">
+        (function () {
+            var burger = document.querySelector('.burger');
+            var nav = document.querySelector('#' + burger.dataset.target);
+
+            burger.addEventListener('click', function () {
+                burger.classList.toggle('is-active');
+                nav.classList.toggle('is-active');
+            });
+        })();
+    </script>
+
+    <!--Start FLOW-->
+    <div class="block">
+        <div class="container">
+            <div id="flow">
+                <span class="flow-1"></span>
+                <span class="flow-2"></span>
+                <span class="flow-3"></span>
+            </div>
+        </div>
+    </div>
+    <!--END FLOW-->
+
+    <section class="section">
+        <div class="columns">
+            <div class="column is-4 is-offset-4">
+                <div class="block">
+                    <figure class="header-logo-img">
+                        <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="380" height="220">
+                        <figcaption class="form-registration-img-caption"><strong>"It's one thing to make a picture of what a person looks like, it's another thing to make a portrait of who they are."</strong></figcaption>
+                    </figure>
                 </div>
 
-                {% load static %}
-                <p class="form-registration-terms text-center"><a href="#">Terms &amp; Conditions</a>|<a href= {% static "policies/privacy_policy.txt" %}>Privacy</a></p>
+                <form method="post" action="register" id="registerform">
+                    <p><strong>Sign up with your email and phone</strong></p>
+                    {% csrf_token %}
+                    <div class="field">
+                        <p class="control has-icons-left has-icons-right">
+                            {{form.email}}
+                            <span class="icon is-small is-left">
+                                <i class="fa fa-envelope" style="color: gray"></i>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left has-icons-right">
+                            {{form.phone}}
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-phone" style="color: gray"></i>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left has-icons-right">
+                            {{form.username}}
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-user" style="color: gray"></i>
+                        </p>
+                    </div>
+                    <div class="field">
+                        <p class="control has-icons-left">
+                            {{form.password}}
+                            <span class="icon is-small is-left">
+                                <i class="fa fa-lock" style="color: gray"></i>
+                            </span>
+                        </p>
+                    </div>
+                </form>
+                <div class="block" style="align-content: center; width: 50%; margin-top: 15px; margin-left:auto; margin-right:auto;">
+                    <p><a href="#">Terms &amp; Conditions</a> | <a href={% static "policies/privacy_policy.txt" %}>Privacy</a></p>
+                </div>
                 <div class="block" style="align-content: center; width: 25%; margin: 0 auto">
                     <a class="field" href="register">
-                        <button class="button is-link is-outlined is-rounded is-size-5 is-size-7-mobile" type="submit" form="loginform" value="submit">
+                        <button class="button is-link is-outlined is-rounded is-size-5 is-size-7-mobile" type="submit" form="registerform" value="submit">
                             <strong>Sign Up</strong>
                         </button>
                     </a>
                 </div>
                 <div class="block" style="align-content: center; width: 45%; margin-top: 15px; margin-left:auto; margin-right:auto;">
-                    <p><strong>Already a member?</strong></p>
+                    <p><strong>Already a member? </strong><a href="login"> Sign In</a></p>
                 </div>
-                <div class="block" style="align-content: center; width: 25%; margin-top: 15px; margin-left:auto; margin-right:auto;">
-                    <a class="field" href="login">
-                        <button class="button is-dark is-outlined is-rounded is-size-5 is-size-7-mobile"><strong>Sign in</strong>
-                        </button>
-                    </a>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-    {%endblock%}
+    </section>
     {%block scripts%}
         <!-- Compressed JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/js/foundation.min.js" integrity="sha256-/PFxCnsMh+nTuM0k3VJCRch1gwnCfKjaP8rJNq5SoBg= sha384-9ksAFjQjZnpqt6VtpjMjlp2S0qrGbcwF/rvrLUg2vciMhwc1UJJeAAOLuJ96w+Nj sha512-UMSn6RHqqJeJcIfV1eS2tPKCjzaHkU/KqgAnQ7Nzn0mLicFxaVhm9vq7zG5+0LALt15j1ljlg8Fp9PT1VGNmDw==" crossorigin="anonymous"></script>
