@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'app',
     'users.apps.UsersConfig',
     'painter.apps.PainterConfig',
+    'client.apps.ClientConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

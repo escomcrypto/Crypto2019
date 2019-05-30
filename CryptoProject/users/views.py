@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
@@ -44,9 +44,9 @@ class LoginView(View):
                 if user.is_active:
                     login(request, user)
                     if user.is_staff:
-                        return HttpResponseRedirect('welcomePainter')
+                        return redirect('painter:welcomePainter')
                     else:
-                        return HttpResponseRedirect('welcome')
+                        return redirect('client:welcome')
             else:
                 return HttpResponse('User is None')
         else:

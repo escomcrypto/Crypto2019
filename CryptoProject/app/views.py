@@ -3,12 +3,6 @@ import os
 
 from io import BytesIO
 from datetime import datetime
-from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
-from reportlab.platypus import Table
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 
 from app.models import PaintingRequest
 
@@ -39,12 +33,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 """==============================="""
 """Roles and Permissions functions"""
 """==============================="""
-
+'''#Paintor role tag
 pnt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and u.is_staff and u.is_active) else False, login_url='/')
 
 def paintor_login_required(view_func):
     decorated_view_func = login_required(pnt_login_required(view_func), login_url='/')
     return decorated_view_func
+
+@paintor_login_required
+@login_required(login_url='/')
 
 # Client role tag
 clt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and not(u.is_staff) and u.is_active) else False, login_url='/')
@@ -52,6 +49,11 @@ clt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and
 def client_login_required(view_func):
     decorated_view_func = login_required(clt_login_required(view_func), login_url='/')
     return decorated_view_func
+    
+@client_login_required
+@login_required(login_url='/')   
+
+    '''
 
 """==============================="""
 """         Systems Views         """
@@ -71,120 +73,9 @@ class HomeView(View):
                 'title':self.context_name,
                 })
 
-##In this view a list of requests that the user has made will be shown
-@client_login_required
-@login_required(login_url='/')
-def ordersList(request):
-
-    #result = PaintingRequest.objects.filter(username=request.user.id).values()
-    result = PaintingRequest.objects.filter(username=request.user.username).values()
-    return render(request, 
-        'app/requestsClient.html', 
-        {
-            'result':result,
-            'title':'Orders',
-            'year':datetime.now().year,
-        })
-
-'''@paintor_login_required
-@login_required(login_url='/')
-def ordersPainter(request):
-    orders = PaintingRequest.objects.filter().values()
-    orders_set = PaintingRequest.objects.filter().only('id','username')
-    verify = []
-    for order in orders_set:
-        order_username = order.username
-        order_id = order.id
-
-        if not(verifying_process(order_username, order_id)):
-            orders = orders.exclude(id=order_id)
-    return render(request, 
-        'app/ordersPainter.html', 
-        {
-            'result':orders,
-            'title':'Orders',
-            'year':datetime.now().year,
-        })'''
-        
-
-@client_login_required
-@login_required(login_url='/')
-def newOrder(request):
-    dt=""
-    if request.method=="POST":
-        dt = datetime.now()
-        var = PaintingRequest(nameRequest=request.POST["nameRequest"],
-        username=request.user.username,
-        dateRequest=dt,
-        description=request.POST["description"],
-        image=request.FILES["image"],
-        status='C',
-        cost=random.randint(150,250),
-        dateDelivery=dt.date() + timedelta(days=30)
-        )
-        var.save()
-        getOrder(dt,request)
-    return render(request,'app/newOrder.html',
-        {
-        'title':'New Order',
-        'year':datetime.now().year,
-        })
-
-'''@paintor_login_required
-@login_required(login_url='/')
-def newDeliver(request):
-    order = PaintingRequest.objects.filter(id=1).values()
-    delivery = order[0]["dateRequest"].date() + timedelta(days=30)
-
-    return render(request,'app/newDeliver.html',
-        {
-        'order':order,
-        'title':'New Deliver',
-        'year':datetime.now().year,
-        'delivery':delivery
-        })'''
-
-@client_login_required
-@login_required(login_url='/')
-def welcome(request):
-    return render(request,'app/mainClient.html',
-        {
-        'title':'Welcome',
-        'year':datetime.now().year,
-        })
-
-
 """==============================="""
-"""       Functions System        """
+"""       Crypto Functions        """
 """==============================="""
-
-def getOrder(dateTime,request):
-    order = PaintingRequest.objects.filter(dateRequest=dateTime, username=request.user.username).values()
-    generate_iv(order[0]["id"])
-    generate_key(order[0]["id"])
-    encrypt_image(order[0]["id"], BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
-    #delete the original image after encryption
-    os.remove(BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
-    build_order_confirmation(order[0]["id"],order[0]["username"],
-    order[0]["nameRequest"],order[0]["description"],order[0]["dateRequest"],
-    order[0]["dateDelivery"],order[0]["cost"])
-    #signing_process(order[0]["username"],order[0]["id"])
-
-
-def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
-    oc = '' #text for the order confirmation
-    oc = oc + str(datetime.now().date()) + '\n\n'
-    oc = oc + 'Order Numbers: ' + str(order_id) + '\n\n'
-    oc = oc + 'Order Details \n'
-    oc = oc + '\tOrder Date: ' + str(order_date.date()) + '\n'
-    oc = oc + '\tUser: ' + user_name + '\n'
-    oc = oc + '\tOrder Name: ' + order_name + '\n'
-    oc = oc + '\tDescription: ' + description + '\n\n'
-    oc = oc + '\tDelivery Date: ' + str(delivery_date) + '\n\n'
-    oc = oc + '\tTotal Cost: $'+ str(cost) + '.00 \n'
-    
-    order_confirmation_file = open(BASE_DIR+'\\CryptoProject\\app\\static\\orders\\'+str(order_id)+'_OrderConfirmation.txt','w')
-    order_confirmation_file.write(oc)
 
 def signing_process(user_id, order_id):
     """sign the order_confirmation"""
@@ -214,49 +105,16 @@ def get_image_bytes(image_file_name):
     image_bytes = image_file.read()
     return image_bytes
 
-def build_image(image_name, image_bytes):
-    """build an image from bytes"""
-    file = open(image_name, 'wb')
-    file.write(image_bytes) 
-    file.close()
-
-    file = open(image_name, 'rb')
-    return file.read()
-
 def generate_key(id):
     """generate a random key of 128 bits and store it in a file in base64"""
     key = get_random_bytes(16)
+    #o_key = obfuscate(key)
     writeBinFile(key, BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
     
 def generate_iv(id):
     """generate a random iv of 128 bits and store it in a file in base64"""
     iv = get_random_bytes(16)
     writeBinFile(iv, BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
-
-def encrypt_image(id, image_file_name):
-    """encrypt and store the client photo"""
-    image_bytes = get_image_bytes(image_file_name)
-    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
-    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
-    
-    #build an AES cipher using OFB mode
-    cipher = AES.new(key, AES.MODE_OFB, iv)
-    #encrypt the images bytes
-    cipher_image_bytes = cipher.encrypt(image_bytes)
-    writeBinFile(cipher_image_bytes, BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '.bin')
-
-def decrypt_image(id, extension):
-    """read and decrypt the client photo"""
-    cipher_image = readBinFile(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '.bin')
-    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
-    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
-    
-    #build an AES cipher using OFB mode
-    cipher = AES.new(key, AES.MODE_OFB, iv)
-    #decrypt the cipher images bytes
-    plain_image_bytes = cipher.decrypt(cipher_image)
-    return plain_image_bytes
-     #build_image(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '_decrypted.'+ extension, plain_image_bytes)
 
 def generate_RSA_keys(id):
     """generate a RSA key pair and stored in .pem files"""
@@ -267,7 +125,6 @@ def generate_RSA_keys(id):
     public_key = key.publickey().export_key()
     pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+id+'_public.pem', 'wb')
     pubkey_file.write(public_key)
-
 
 def verifying_process(user_id, order_id):
     """verifying"""
@@ -282,66 +139,28 @@ def verifying_process(user_id, order_id):
     except (ValueError, TypeError):
         return False
 
+def encrypt_image(id, image_file_name, directory):
+    """encrypt and store the client photo"""
+    image_bytes = get_image_bytes(image_file_name)
+    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
+    #key = deobfuscated(o_key)
+    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
+    
+    #build an AES cipher using OFB mode
+    cipher = AES.new(key, AES.MODE_OFB, iv)
+    #encrypt the images bytes
+    cipher_image_bytes = cipher.encrypt(image_bytes)
+    writeBinFile(cipher_image_bytes, BASE_DIR + '\\CryptoProject\\app\\static\\images\\'+directory+'\\' + str(id) + '.bin')
 
-"""==============================="""
-"""         Image View            """
-"""==============================="""
-
-def viewOrder(request):
-    if request.method == 'GET':
-        order_id = request.GET.get('orderid')
-        #response = HttpResponse(content_type='text/plain')
-
-        order = PaintingRequest.objects.get(id=int(order_id))
-        name = str(order.image.name)
-        extension = name[(name.rfind('.')+1):]
-
-        original_image = decrypt_image(order_id, extension)
-        response = HttpResponse(original_image, content_type='image/'+extension)
-        response['Content-Disposition'] = 'attachment; filename=%s' % name[(name.rfind('/')+1):]
-
-        return response
-
-
-"""==============================="""
-"""         PDF Generation        """
-"""==============================="""
-
-def generar_orden(request):
-    if request.method == 'GET':
-        order_id = request.GET.get('orderid')
-        username = request.GET.get('username')
-
-        response = HttpResponse(content_type='application/pdf')
-        pdf_name = "orders.pdf"
-        #response['Content-Disposition'] = 'attachment; filename=%s' % pdf_name
-        buffer = BytesIO()
-
-        '''Drawing pdf logo'''
-        pdf = canvas.Canvas(buffer)
-        logo_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\art.PNG'
-        pdf.drawImage(logo_image, 40, 680, 240, 180,preserveAspectRatio=True)
-        '''Order Content '''
-        #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
-        pdf.setFont("Helvetica-Bold", 16)
-        #Dibujamos una cadena en la ubicación X,Y especificada
-        pdf.drawString(320, 760, u"Order Confirmation")
-
-        order = open(BASE_DIR + '\\CryptoProject\\app\\static\\orders\\' + str(order_id) + '_OrderConfirmation.txt', "r")
-        height = 660
-        width = 40
-        pdf.setFont("Helvetica-Bold", 12)
-
-        for line in order:
-            pdf.drawString(width, height, line.strip().encode())
-            height = height - 20
-
-        shopping_image = BASE_DIR + '\\CryptoProject\\app\\static\\images\\shopping.jpg'
-        pdf.drawImage(shopping_image, 330, 320, 250, 350, preserveAspectRatio=True)
-
-        pdf.showPage()
-        pdf.save()
-        pdf = buffer.getvalue()
-        buffer.close()
-        response.write(pdf)
-        return response
+def decrypt_image(id, extension, directory):
+    """read and decrypt the client photo"""
+    cipher_image = readBinFile(BASE_DIR + '\\CryptoProject\\app\\static\\images\\'+directory+'\\' + str(id) + '.bin')
+    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
+    #key = deobfuscated(o_key)
+    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
+    
+    #build an AES cipher using OFB mode
+    cipher = AES.new(key, AES.MODE_OFB, iv)
+    #decrypt the cipher images bytes
+    plain_image_bytes = cipher.decrypt(cipher_image)
+    return plain_image_bytes

@@ -1,39 +1,21 @@
 import base64
 import os
 import app.views
+import random
+ 
+from app.views import encrypt_image, decrypt_image
 
 from io import BytesIO
-from datetime import datetime
-from reportlab.platypus import SimpleDocTemplate, Paragraph, TableStyle
-from reportlab.platypus import Table
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 
 from app.models import PaintingRequest
 
-import random
-from datetime import timedelta
-
-from Crypto.PublicKey import RSA
-from Crypto.Signature import pkcs1_15
-from Crypto.Hash import SHA384
-from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
+from datetime import timedelta,datetime
 
 from django.shortcuts import render,redirect
 from django.conf import settings
-from django.http import HttpResponseRedirect
 from django.http import HttpResponse
-from django.http import HttpRequest
 from django.views.generic import View
-
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-
-from django.shortcuts import render
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
@@ -102,11 +84,12 @@ class NewDeliver(View):
         order.imageD=request.FILES["image"]
         order.dateDelivery=datetime.now().date()
         order.save()
-        return redirect("painter:ordersPainter")
+        getOrder(order.id)
+        return redirect("painter:deliversPainter")
         
 class DeliversPainter(View):
     template_name='deliversPainter.html'
-    context_object_name='Delivers'
+    context_object_name='Deliveries'
 
     def get(self, request, format=None):
         orders = PaintingRequest.objects.filter(status="D").values()
@@ -135,7 +118,7 @@ class DownloadImage(View):
 
 class ViewOrder(View):
     context_object_name="View Deliver"
-    template_name="view.html"
+    template_name="viewOrder.html"
 
     def get(self, request, format=None):
         order_id = request.GET.get('orderid')
@@ -145,62 +128,24 @@ class ViewOrder(View):
         extension = name[(name.rfind('.')+1):]
         extensionD = nameD[(name.rfind('.')+1):]
         original_image = decrypt_image(order_id, extension, "originals")
+        original=base64.b64encode(original_image).decode()
         portrait_image = decrypt_image(order_id, extension, "portraits")
+        portrait=base64.b64encode(portrait_image).decode()
         return render(request, 
             self.template_name, 
             {
+                'mime':extension,
+                'original':original,
+                'mime2':extensionD,
+                'portrait':portrait,
                 'title':self.context_object_name,
                 'year':datetime.now().year,
             })
 
 
-def getOrder(dateTime,request):
-    order = PaintingRequest.objects.filter(dateRequest=dateTime, username=request.user.username).values()
-    encrypt_image(order[0]["id"], BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
+def getOrder(orderid):
+    order = PaintingRequest.objects.filter(id=orderid).values()
+    encrypt_image(order[0]["id"], BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["imageD"].replace("/","\\"),"portraits")
     #delete the original image after encryption
-    os.remove(BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["image"].replace("/","\\"))
+    os.remove(BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["imageD"].replace("/","\\"))
     #signing_process(order[0]["username"],order[0]["id"])
-
-def writeBinFile(file_bytes, file_name):
-    """write a binary file in base64"""
-    file = open(file_name, 'wb')
-    file.write(base64.b64encode(file_bytes)) 
-    file.close()
-    
-def readBinFile(file_name):
-    """read a binary file in base64"""
-    file = open(file_name, 'rb')
-    file_bytes = file.read()
-    file.close()
-    return base64.b64decode(file_bytes)
-
-def encrypt_image(id, image_file_name):
-    """encrypt and store the client photo"""
-    image_bytes = get_image_bytes(image_file_name)
-    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
-    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
-    
-    #build an AES cipher using OFB mode
-    cipher = AES.new(key, AES.MODE_OFB, iv)
-    #encrypt the images bytes
-    cipher_image_bytes = cipher.encrypt(image_bytes)
-    writeBinFile(cipher_image_bytes, BASE_DIR + '\\CryptoProject\\app\\static\\images\\portraits\\' + str(id) + '.bin')
-
-def get_image_bytes(image_file_name):
-    """get the bytes of an image file in base64"""
-    image_file = open(image_file_name,'rb')
-    image_bytes = image_file.read()
-    return image_bytes
-
-def decrypt_image(id, extension, directory):
-    """read and decrypt the client photo"""
-    cipher_image = readBinFile(BASE_DIR + '\\CryptoProject\\app\\static\\images\\'+directory+'\\' + str(id) + '.bin')
-    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
-    iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
-    
-    #build an AES cipher using OFB mode
-    cipher = AES.new(key, AES.MODE_OFB, iv)
-    #decrypt the cipher images bytes
-    plain_image_bytes = cipher.decrypt(cipher_image)
-    return plain_image_bytes
-     #build_image(BASE_DIR + '\\CryptoProject\\app\\static\\images\\originals\\' + str(id) + '_decrypted.'+ extension, plain_image_bytes)

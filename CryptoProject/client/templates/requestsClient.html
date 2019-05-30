@@ -1,4 +1,4 @@
-  {% extends "app/layout.html" %}
+  {% extends "layoutClient.html" %}
   {% block links %}
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
@@ -28,20 +28,11 @@
               <tr class="table-expand-row" data-open-details>
                 <td class="text-center">{{r.nameRequest}}</td>
                 <td class="text-center">{{r.dateRequest}}</td>
-                {% ifequal r.status "D" %}
-                <td class="text-center">Delivery</td>
-                {% else %}
-                <td class="text-center">In creation</td>
-                {% endifequal %}
+                <td class="text-center">{{r.dateDelivery}}</td>
                 <td class="text-center">
                   <a href="order_generated_pdf?orderid={{r.id}}">
-                    <i class="far fa-file-pdf"></i>
+                    <i class="far fa-file-pdf" title="PDF Confirmation"></i>
                   </a>
-				  {% ifequal r.status "D" %}
-                  <a href="#">
-                    <i class="fas fa-file-download"></i>
-                  </a>
-				 {% endifequal %}
                 </td>
               </tr>  
             {% endfor %}             

@@ -15,12 +15,8 @@ app_name = 'cryptoproject'
 
 
 urlpatterns = [path('', views.HomeView.as_view(), name='home'),
-                path('orders', views.ordersList, name="orders"),
-                path('welcome', views.welcome, name="welcome"),
-                path('newOrder', views.newOrder, name="newOrder"),
-                path('viewOrder', views.viewOrder, name="viewOrder"),
-                path('order_generated_pdf', views.generar_orden, name='order_report_pdf'),
                 path('user/', include('users.urls')),
+                path('client/',include('client.urls', namespace="client")),
                 path('painter/',include('painter.urls', namespace="painter")),] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
                 
 
