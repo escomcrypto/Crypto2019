@@ -109,9 +109,9 @@ class DownloadImage(View):
 
         return response
 
-class ViewOrder(View):
+class ViewOrderC(View):
     context_object_name="View Deliver"
-    template_name="viewOrder.html"
+    template_name="viewOrderC.html"
 
     def get(self, request, format=None):
         order_id = request.GET.get('orderid')
