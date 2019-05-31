@@ -94,7 +94,7 @@ class NewOrder(View):
             )
         var.save()
         getOrder(dt,request)
-        messages.add_message(request, messages.SUCCESS,'Successful order.')
+        messages.add_message(request, messages.SUCCESS,'Your order has been sent successfully.')
         return redirect("client:ordersList")
 
 class DownloadImage(View):

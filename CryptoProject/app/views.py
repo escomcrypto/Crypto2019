@@ -21,6 +21,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.http import HttpRequest
+from django.contrib import messages
 from django.views.generic import View
 
 from django.contrib.auth.decorators import login_required, user_passes_test

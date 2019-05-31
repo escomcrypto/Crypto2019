@@ -1,5 +1,16 @@
 ﻿{% extends "app/layoutArt.html" %}
+{%block links%}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+{% endblock %}      
      {%block content%}
+     {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="{{ message.tags }} alert alert-success" role="alert" {% endif %}>  
+               <i class="fas fa-check"></i>    
+                                <strong class="alert-success">WELL DONE!</strong> {{ message }}
+            </div>
+       {% endfor %}
+     {% endif %}
                 <form method="post" action="login" id="loginform">
                     {% csrf_token %}
                     <div class="field">
@@ -19,7 +30,10 @@
                     </div>
                     {% if messages %}
                         {% for message in messages %}
-                            <div {% if message.tags %} class="{{ message.tags }} alert alert-danger" role="alert" {% endif %}>{{ message }}</div>
+                            <div {% if message.tags %} class="{{ message.tags }} alert alert-danger" role="alert" {% endif %}>  
+                                <i class="fas fa-times"></i>    
+                                <strong class="alert-danger">Error!</strong> {{ message }}
+                            </div>
                         {% endfor %}
                     {% endif %}
                 </form>

@@ -10,7 +10,11 @@
           <h1 class="text-center">{{title}}</h1>
           {% if messages %}
                         {% for message in messages %}
-                            <div {% if message.tags %} class="{{ message.tags }} alert alert-success" role="alert" {% endif %}>{{ message }}</div>
+                            <div {% if message.tags %} class="{{ message.tags }} alert alert-success" role="alert" {% endif %}>
+                                <i class="fas fa-check"></i>    
+                                <strong class="alert-success">Well done!</strong> 
+                              {{ message }}
+                            </div>
                         {% endfor %}
           {% endif %}
 		        {% block button %}

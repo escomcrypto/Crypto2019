@@ -86,7 +86,7 @@ class NewDeliver(View):
         order.dateDelivery=datetime.now().date()
         order.save()
         getOrder(order.id)
-        messages.add_message(request, messages.SUCCESS,'Successful deliver.')
+        messages.add_message(request, messages.SUCCESS,'The painting has been successfully.')
         return redirect("painter:deliversPainter")
         
 class DeliversPainter(View):

@@ -49,7 +49,7 @@ class LoginView(View):
                     else:
                         return redirect('client:welcome')
             else:
-                messages.add_message(request, messages.INFO,'Incorrect user and/or password.')
+                messages.add_message(request, messages.ERROR,'Incorrect user and/or password.')
 
         return render(request,
             self.template_name,
@@ -146,6 +146,7 @@ class CodeVerifyRView(View):
  
         if (response['status'] == '0'):
             request.session['verified'] = True
+            messages.add_message(request, messages.SUCCESS,'You have been successfully registered in ART.')
             return HttpResponseRedirect('login')
         else:
             TwoFactor.objects.filter(id=request.session['two_factor']).delete()
