@@ -121,7 +121,7 @@ class NewOrder(View):
             )
         var.save()
         getOrder(dt,request)
-        messages.add_message(request, messages.SUCCESS,'Your order has been sent successfully.')
+        messages.success(request,'Your order has been sent successfully.')
         return redirect("client:ordersList")
 
 @cbv_decorator(client_login_required)

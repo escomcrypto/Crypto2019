@@ -114,7 +114,7 @@ class NewDeliver(View):
         order.dateDelivery=datetime.now().date()
         order.save()
         getOrder(order.id)
-        messages.add_message(request, messages.SUCCESS,'The painting has been successfully.')
+        messages.success(request,'The painting has been successfully.')
         return redirect("painter:deliversPainter")
 
 @cbv_decorator(paintor_login_required)  

@@ -52,7 +52,7 @@ class LoginView(View):
                 else:
                     messages.add_message(request, messages.ERROR,'User not active.')
             else:
-                messages.add_message(request, messages.ERROR,'Incorrect user and/or password.')
+                messages.error(request,'Incorrect user and/or password.')
 
         return render(request,
             self.template_name,
@@ -115,7 +115,7 @@ class RegisterView(View):
                 else:
                     two_factor.delete()
                     new_user.delete()
-                    messages.add_message(request, messages.INFO, 'Could not verify your number. Please contact support.')
+                    messages.info(request, 'Could not verify your number. Please contact support.')
                     return HttpResponseRedirect('/')
 
         return render(request,
@@ -149,12 +149,12 @@ class CodeVerifyRView(View):
  
         if (response['status'] == '0'):
             request.session['verified'] = True
-            messages.add_message(request, messages.SUCCESS,'You have been successfully registered in ART.')
+            messages.success(request,'You have been successfully registered in ART.')
             return HttpResponseRedirect('login')
         else:
             TwoFactor.objects.filter(id=request.session['two_factor']).delete()
             User.objects.filter(id=request.session['user']).delete()
-            messages.add_message(request, messages.INFO, 'Could not verify code. Please try again.')
+            messages.info(request, 'Could not verify code. Please try again.')
             return HttpResponseRedirect('/')
  
  
