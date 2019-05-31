@@ -5,7 +5,7 @@ from io import BytesIO
 from datetime import datetime
 
 from app.models import PaintingRequest
-from app.obfuscated import decrypt_key, encrypt_key
+from app.obfuscated2 import decrypt_key, encrypt_key
 
 import random
 from datetime import timedelta
