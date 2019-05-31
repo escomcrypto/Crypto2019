@@ -11,23 +11,49 @@ from app.models import PaintingRequest
 
 from datetime import timedelta,datetime
 
+from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+
 from django.shortcuts import render,redirect
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.generic import View
 from django.contrib import messages
+
+from django.contrib.auth import decorators
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
 pnt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and u.is_staff and u.is_active) else False, login_url='/')
 
+"""===================================="""
+"""Roles and Permissions CBV decorators"""
+"""===================================="""
 def paintor_login_required(view_func):
     decorated_view_func = login_required(pnt_login_required(view_func), login_url='/')
     return decorated_view_func
 
+def cbv_decorator(decorator):
+    """
+    Turns a normal view decorator into a class-based-view decorator.
+    
+    Usage:
+    
+    @cbv_decorator(login_required)
+    class MyClassBasedView(View):
+        pass
+    """
+    def _decorator(cls):
+        cls.dispatch = method_decorator(decorator)(cls.dispatch)
+        return cls
+    return _decorator
+
 # Create your views here.
 
+@cbv_decorator(paintor_login_required)
 class WelcomePainter(View):
     template_name='mainPainter.html'
     context_object_name='Welcome'
@@ -40,18 +66,19 @@ class WelcomePainter(View):
                 'year':datetime.now().year,
             })
 
+@cbv_decorator(paintor_login_required)
 class OrdersPainter(View):
     template_name='ordersPainter.html'
     context_object_name='Orders'
 
     def get(self, request, format=None):
         orders = PaintingRequest.objects.filter(status="C").values()
-        #orders_set = PaintingRequest.objects.filter().only('id','username')
-        #for order in orders_set:
-            #order_username = order.username
-            #order_id = order.id
-            #if not(verifying_process(order_username, order_id)):
-                #orders = orders.exclude(id=order_id)
+        orders_set = PaintingRequest.objects.filter().only('id','username','signature','image')
+        
+        for order in orders_set:
+            if not(verifying_process(order)):
+                orders = orders.exclude(id=order.id)
+
         return render(request, 
             self.template_name, 
             {
@@ -60,6 +87,7 @@ class OrdersPainter(View):
                 'year':datetime.now().year,
             })
 
+@cbv_decorator(paintor_login_required)
 class NewDeliver(View):
     template_name='newDeliver.html'
     context_object_name='New Deliver'
@@ -88,7 +116,8 @@ class NewDeliver(View):
         getOrder(order.id)
         messages.add_message(request, messages.SUCCESS,'The painting has been successfully.')
         return redirect("painter:deliversPainter")
-        
+
+@cbv_decorator(paintor_login_required)  
 class DeliversPainter(View):
     template_name='deliversPainter.html'
     context_object_name='Deliveries'
@@ -103,6 +132,7 @@ class DeliversPainter(View):
                 'year':datetime.now().year,
             })
 
+@cbv_decorator(paintor_login_required)
 class DownloadImage(View):
     def get(self, request, format=None):
         order_id = request.GET.get('orderid')
@@ -118,6 +148,7 @@ class DownloadImage(View):
 
         return response
 
+@cbv_decorator(paintor_login_required)
 class ViewOrder(View):
     context_object_name="View Deliver"
     template_name="viewOrder.html"
@@ -144,6 +175,23 @@ class ViewOrder(View):
                 'year':datetime.now().year,
             })
 
+def base64_2_bytes(base64string):
+    """Decode base64 string to bytes object"""
+    return base64.b64decode(base64string)
+
+def verifying_process(order):
+    """verifying"""
+    public_key = RSA.import_key(open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+str(order.username)+'_public.pem').read())
+    signature = base64_2_bytes(order.signature)
+    name = str(order.image.name)
+    extension = name[(name.rfind('.')+1):]
+    original_image = decrypt_image(order.id, extension, "originals")
+    h = SHA256.new(original_image)
+    try:
+        pkcs1_15.new(public_key).verify(h, signature)
+        return True
+    except (ValueError, TypeError):
+        return False
 
 def getOrder(orderid):
     order = PaintingRequest.objects.filter(id=orderid).values()

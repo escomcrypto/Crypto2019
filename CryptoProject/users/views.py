@@ -41,13 +41,16 @@ class LoginView(View):
             password = request.POST.get('password')
 
             user = authenticate(username=username, password=password)
+            two_factor = TwoFactor.objects.get(user_id=user.id)
             if user is not None:
-                if user.is_active:
+                if user.is_active and two_factor.isverified:
                     login(request, user)
                     if user.is_staff:
                         return redirect('painter:welcomePainter')
                     else:
                         return redirect('client:welcome')
+                else:
+                    messages.add_message(request, messages.ERROR,'User not active.')
             else:
                 messages.add_message(request, messages.ERROR,'Incorrect user and/or password.')
 
@@ -158,13 +161,3 @@ class CodeVerifyRView(View):
     def check_verification_request(self, request):
         client = nexmo.Client(key=settings.NEXMO_API_KEY, secret=settings.NEXMO_API_SECRET)
         return client.check_verification(request.session['verification_id'], code=request.POST.get('code'))
-
-def handler404(request, exception, template_name="404.html"):
-    response = render_to_response("404.html")
-    response.status_code = 404
-    return response
-
-def handler404(request, exception, template_name="500.html"):
-    response = render_to_response("500.html")
-    response.status_code = 500
-    return response

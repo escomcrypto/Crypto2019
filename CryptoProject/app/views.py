@@ -32,30 +32,6 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
-"""==============================="""
-"""Roles and Permissions functions"""
-"""==============================="""
-'''#Paintor role tag
-pnt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and u.is_staff and u.is_active) else False, login_url='/')
-
-def paintor_login_required(view_func):
-    decorated_view_func = login_required(pnt_login_required(view_func), login_url='/')
-    return decorated_view_func
-
-@paintor_login_required
-@login_required(login_url='/')
-
-# Client role tag
-clt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and not(u.is_staff) and u.is_active) else False, login_url='/')
-
-def client_login_required(view_func):
-    decorated_view_func = login_required(clt_login_required(view_func), login_url='/')
-    return decorated_view_func
-    
-@client_login_required
-@login_required(login_url='/')   
-
-    '''
 
 """==============================="""
 """         Systems Views         """
@@ -166,7 +142,6 @@ def decrypt_image(id, extension, directory):
     #decrypt the cipher images bytes
     plain_image_bytes = cipher.decrypt(cipher_image)
     return plain_image_bytes
-
 
 # HTTP Error 404
 def handler404(request, exception, template_name="404.html"):

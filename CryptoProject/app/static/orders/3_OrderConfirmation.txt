@@ -1,0 +1,13 @@
+2019-05-31
+
+Order Numbers: 3
+
+Order Details 
+	Order Date: 2019-05-31
+	User: Eric Alejandro
+	Order Name: My portrait
+	Description: A portait of me
+
+	Delivery Date: 2019-06-30
+
+	Total Cost: $158.00 

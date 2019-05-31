@@ -7,8 +7,9 @@
     "\\client",
     "\\client\\templates",
     "\\CryptoProject",
+    "\\painter",
     "\\users"
   ],
-  "SelectedNode": "\\client\\views.py",
+  "SelectedNode": "\\users\\views.py",
   "PreviewInSolutionExplorer": false
 }

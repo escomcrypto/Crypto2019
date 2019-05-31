@@ -21,10 +21,16 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.views.generic import View
 from django.contrib import messages
+
+from django.contrib.auth import decorators
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
+"""===================================="""
+"""Roles and Permissions CBV decorators"""
+"""===================================="""
 # Client role tag
 clt_login_required = user_passes_test(lambda u: True if (not(u.is_superuser) and not(u.is_staff) and u.is_active) else False, login_url='/')
 
@@ -32,6 +38,24 @@ def client_login_required(view_func):
     decorated_view_func = login_required(clt_login_required(view_func), login_url='/')
     return decorated_view_func
 
+from django.utils.decorators import method_decorator
+
+def cbv_decorator(decorator):
+    """
+    Turns a normal view decorator into a class-based-view decorator.
+    
+    Usage:
+    
+    @cbv_decorator(login_required)
+    class MyClassBasedView(View):
+        pass
+    """
+    def _decorator(cls):
+        cls.dispatch = method_decorator(decorator)(cls.dispatch)
+        return cls
+    return _decorator
+
+@cbv_decorator(client_login_required)
 class Welcome(View):
     template_name='mainClient.html'
     context_object_name='Welcome'
@@ -44,6 +68,7 @@ class Welcome(View):
                 'year':datetime.now().year,
             })
 
+@cbv_decorator(client_login_required)
 class OrdersList(View):
     template_name='requestsClient.html'
     context_object_name='Orders'
@@ -57,6 +82,7 @@ class OrdersList(View):
                 'year':datetime.now().year,
             })
 
+@cbv_decorator(client_login_required)
 class DeliversClient(View):
     template_name='deliversClient.html'
     context_object_name='Delivers'
@@ -70,6 +96,7 @@ class DeliversClient(View):
                 'year':datetime.now().year,
             })
 
+@cbv_decorator(client_login_required)
 class NewOrder(View):
     template_name='newOrder.html'
     context_object_name='New Order'
@@ -80,7 +107,7 @@ class NewOrder(View):
         'year':datetime.now().year,
         })
 
-    def post(self, request, fromat=None):
+    def post(self, request, format=None):
         dt = datetime.now()
         var = PaintingRequest(nameRequest=request.POST["nameRequest"],
             username=request.user.username,
@@ -97,6 +124,7 @@ class NewOrder(View):
         messages.add_message(request, messages.SUCCESS,'Your order has been sent successfully.')
         return redirect("client:ordersList")
 
+@cbv_decorator(client_login_required)
 class DownloadImage(View):
     def get(self, request, format=None):
         order_id = request.GET.get('orderid')
@@ -111,6 +139,7 @@ class DownloadImage(View):
 
         return response
 
+@cbv_decorator(client_login_required)
 class ViewOrderC(View):
     context_object_name="View Deliver"
     template_name="viewOrderC.html"
@@ -137,6 +166,10 @@ class ViewOrderC(View):
                 'year':datetime.now().year,
             })
 
+"""==============================="""
+"""         IMAGE ORDER           """
+"""==============================="""
+
 def getOrder(dateTime,request):
     order = PaintingRequest.objects.filter(dateRequest=dateTime, username=request.user.username).values()
     generate_iv(order[0]["id"])
@@ -147,7 +180,6 @@ def getOrder(dateTime,request):
     build_order_confirmation(order[0]["id"],order[0]["username"],
     order[0]["nameRequest"],order[0]["description"],order[0]["dateRequest"],
     order[0]["dateDelivery"],order[0]["cost"])
-    #signing_process(order[0]["username"],order[0]["id"])
 
 def build_order_confirmation(order_id, user_name, order_name, description, order_date, delivery_date, cost):
     oc = '' #text for the order confirmation
