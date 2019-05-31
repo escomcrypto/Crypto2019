@@ -87,6 +87,7 @@ class NewOrder(View):
             dateRequest=dt,
             description=request.POST["description"],
             image=request.FILES["image"],
+            signature=request.POST["signature"],
             status='C',
             cost=random.randint(150,250),
             dateDelivery=dt.date() + timedelta(days=30)
