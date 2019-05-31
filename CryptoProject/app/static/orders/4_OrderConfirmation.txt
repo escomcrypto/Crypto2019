@@ -1,0 +1,13 @@
+2019-05-31
+
+Order Numbers: 4
+
+Order Details 
+	Order Date: 2019-05-31
+	User: Eric Alejandro
+	Order Name: My new order
+	Description: My new order
+
+	Delivery Date: 2019-06-30
+
+	Total Cost: $227.00 

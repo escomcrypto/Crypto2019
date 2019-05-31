@@ -148,6 +148,9 @@ class CodeVerifyRView(View):
         response = self.check_verification_request(request)
  
         if (response['status'] == '0'):
+            two_factor = TwoFactor.objects.get(user_id=request.session['user'])
+            two_factor.isverified = True
+            two_factor.save()
             request.session['verified'] = True
             messages.success(request,'You have been successfully registered in ART.')
             return HttpResponseRedirect('login')
