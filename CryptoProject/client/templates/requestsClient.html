@@ -4,17 +4,20 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
   {% endblock %}      
       {% block content %}
+    </br>
     <div class="container">
       <div class="card">
         <div class="card-body">
           <h1 class="text-center">{{title}}</h1>
           {% if messages %}
                         {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
                             <div {% if message.tags %} class="{{ message.tags }} alert alert-success" role="alert" {% endif %}>
                                 <i class="fas fa-check"></i>    
                                 <strong class="alert-success">Well done!</strong> 
                               {{ message }}
                             </div>
+                            {% endif %}
                         {% endfor %}
           {% endif %}
 		        {% block button %}

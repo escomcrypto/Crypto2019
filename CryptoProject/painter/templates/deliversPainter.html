@@ -12,10 +12,12 @@
         <h1 class="text-center">{{title}}</h1>
         {% if messages %}
         {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
             <i class="fas fa-check"></i>    
             <strong class="alert-success">Well done!</strong> 
             <div {% if message.tags %} class="{{ message.tags }} alert alert-success" role="alert" {% endif %}>{{ message }}</div>
-        {% endfor %}
+            {% endif %}
+            {% endfor %}
         {% endif %}
         <table class="table-expand">
           <thead>

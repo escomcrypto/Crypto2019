@@ -1,0 +1,13 @@
+2019-05-31
+
+Order Numbers: 1
+
+Order Details 
+	Order Date: 2019-05-31
+	User: Mayra
+	Order Name: Pedido 1
+	Description: Descripcion 1
+
+	Delivery Date: 2019-06-30
+
+	Total Cost: $232.00 
