@@ -5,6 +5,7 @@ from io import BytesIO
 from datetime import datetime
 
 from app.models import PaintingRequest
+from app.obfuscated import decrypt_key, encrypt_key
 
 import random
 from datetime import timedelta
@@ -108,8 +109,8 @@ def get_image_bytes(image_file_name):
 def generate_key(id):
     """generate a random key of 128 bits and store it in a file in base64"""
     key = get_random_bytes(16)
-    #o_key = obfuscate(key)
-    writeBinFile(key, BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
+    o_key = encrypt_key(key)
+    writeBinFile(o_key, BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
     
 def generate_iv(id):
     """generate a random iv of 128 bits and store it in a file in base64"""
@@ -142,8 +143,8 @@ def verifying_process(user_id, order_id):
 def encrypt_image(id, image_file_name, directory):
     """encrypt and store the client photo"""
     image_bytes = get_image_bytes(image_file_name)
-    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
-    #key = deobfuscated(o_key)
+    o_key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
+    key = decrypt_key(o_key)
     iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
     
     #build an AES cipher using OFB mode
@@ -155,8 +156,8 @@ def encrypt_image(id, image_file_name, directory):
 def decrypt_image(id, extension, directory):
     """read and decrypt the client photo"""
     cipher_image = readBinFile(BASE_DIR + '\\CryptoProject\\app\\static\\images\\'+directory+'\\' + str(id) + '.bin')
-    key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
-    #key = deobfuscated(o_key)
+    o_key = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_key.bin')
+    key = decrypt_key(o_key)
     iv = readBinFile(BASE_DIR + '\\CryptoProject\\keys\\orders\\' + str(id) + '_iv.bin')
     
     #build an AES cipher using OFB mode

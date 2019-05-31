@@ -17,6 +17,11 @@
                             </span>
                         </p>
                     </div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div {% if message.tags %} class="{{ message.tags }} alert alert-danger" role="alert" {% endif %}>{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
                 </form>
                 <div class="level options" style="margin-top:10px">
                     <label class="checkbox" id="rememberChkBox">

@@ -20,6 +20,7 @@ from reportlab.pdfgen import canvas
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.views.generic import View
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
@@ -92,6 +93,7 @@ class NewOrder(View):
             )
         var.save()
         getOrder(dt,request)
+        messages.add_message(request, messages.SUCCESS,'Successful order.')
         return redirect("client:ordersList")
 
 class DownloadImage(View):

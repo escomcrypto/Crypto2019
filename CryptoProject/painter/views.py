@@ -15,6 +15,7 @@ from django.shortcuts import render,redirect
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.generic import View
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
@@ -85,6 +86,7 @@ class NewDeliver(View):
         order.dateDelivery=datetime.now().date()
         order.save()
         getOrder(order.id)
+        messages.add_message(request, messages.SUCCESS,'Successful deliver.')
         return redirect("painter:deliversPainter")
         
 class DeliversPainter(View):
