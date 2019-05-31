@@ -9,5 +9,6 @@ urlpatterns = [
     path('newDeliver',views.NewDeliver.as_view(),name='newDeliver'),
     path('deliversPainter',views.DeliversPainter.as_view(), name='deliversPainter'),
     path('downloadImage',views.DownloadImage.as_view(),name="downloadImage"),
-    path('viewOrder',views.ViewOrder.as_view(), name='viewOrder')
+    path('viewOrder',views.ViewOrder.as_view(), name='viewOrder'),
+    path('logoutPainter', views.LogoutView.as_view(), name='logoutPainter'),
 ]

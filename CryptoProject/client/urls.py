@@ -11,4 +11,5 @@ urlpatterns = [
     path('downloadImage',views.DownloadImage.as_view(),name="downloadImage"),
     path('viewOrderC',views.ViewOrderC.as_view(), name='viewOrderC'),
     path('order_generated_pdf', views.generar_orden, name='order_report_pdf'),
+    path('logoutClient', views.LogoutView.as_view(), name='logoutClient'),
 ]

@@ -6,7 +6,7 @@ from django.http import HttpRequest
 
 from django.views.generic import View
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.conf import settings
 
@@ -41,8 +41,8 @@ class LoginView(View):
             password = request.POST.get('password')
 
             user = authenticate(username=username, password=password)
-            two_factor = TwoFactor.objects.get(user_id=user.id)
             if user is not None:
+                two_factor = TwoFactor.objects.get(user_id=user.id)
                 if user.is_active and two_factor.isverified:
                     login(request, user)
                     if user.is_staff:
@@ -50,7 +50,7 @@ class LoginView(View):
                     else:
                         return redirect('client:welcome')
                 else:
-                    messages.add_message(request, messages.ERROR,'User not active.')
+                    messages.error(request,'User not active.')
             else:
                 messages.error(request,'Incorrect user and/or password.')
 

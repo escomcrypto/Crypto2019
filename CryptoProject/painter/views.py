@@ -18,12 +18,15 @@ from Crypto.Hash import SHA256
 from django.shortcuts import render,redirect
 from django.conf import settings
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.views.generic import View
 from django.contrib import messages
 
 from django.contrib.auth import decorators
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
+
+from django.contrib.auth import logout
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
@@ -52,6 +55,12 @@ def cbv_decorator(decorator):
     return _decorator
 
 # Create your views here.
+
+@cbv_decorator(paintor_login_required)
+class LogoutView(View):
+    def get(self, request, format=None):
+        logout(request)
+        return HttpResponseRedirect('/')
 
 @cbv_decorator(paintor_login_required)
 class WelcomePainter(View):

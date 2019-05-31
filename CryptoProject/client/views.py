@@ -19,12 +19,15 @@ from reportlab.pdfgen import canvas
 
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.views.generic import View
 from django.contrib import messages
 
 from django.contrib.auth import decorators
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
+
+from django.contrib.auth import logout
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath("views.py")))
 
@@ -54,6 +57,12 @@ def cbv_decorator(decorator):
         cls.dispatch = method_decorator(decorator)(cls.dispatch)
         return cls
     return _decorator
+
+@cbv_decorator(client_login_required)
+class LogoutView(View):
+    def get(self, request, format=None):
+        logout(request)
+        return HttpResponseRedirect('/')
 
 @cbv_decorator(client_login_required)
 class Welcome(View):

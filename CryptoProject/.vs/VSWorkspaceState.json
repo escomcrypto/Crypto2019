@@ -6,10 +6,10 @@
     "\\app\\templates\\app",
     "\\client",
     "\\client\\templates",
-    "\\CryptoProject",
     "\\painter",
+    "\\painter\\templates",
     "\\users"
   ],
-  "SelectedNode": "\\users\\views.py",
+  "SelectedNode": "\\painter\\views.py",
   "PreviewInSolutionExplorer": false
 }
