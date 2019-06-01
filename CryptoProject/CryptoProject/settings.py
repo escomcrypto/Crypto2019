@@ -127,5 +127,5 @@ MEDIA_URL ='/media/'
 MEDIA_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['app\\static\\images']))
 
 # .env
-NEXMO_API_KEY = env.str('NEXMO_API_KEY')
-NEXMO_API_SECRET = env.str('NEXMO_API_SECRET')
+NEXMO_API_KEY = '4867ec2b'#env.str('NEXMO_API_KEY')
+NEXMO_API_SECRET = 'FvsnsFSKA4PjtvYw' #env.str('NEXMO_API_SECRET')
