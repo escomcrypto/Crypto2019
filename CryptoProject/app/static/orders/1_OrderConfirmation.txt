@@ -4,10 +4,10 @@ Order Numbers: 1
 
 Order Details 
 	Order Date: 2019-05-31
-	User: Mayra
-	Order Name: Pedido 1
-	Description: Descripcion 1
+	User: Eric Alejandro
+	Order Name: My portrait
+	Description: A portrait of my bff
 
 	Delivery Date: 2019-06-30
 
-	Total Cost: $232.00 
+	Total Cost: $225.00 

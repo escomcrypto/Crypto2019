@@ -23,8 +23,13 @@ from django.http import HttpResponseRedirect
 from django.views.generic import View
 from django.contrib import messages
 
+from Crypto.PublicKey import RSA
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA256
+
 from django.contrib.auth import decorators
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.contrib.auth import logout
@@ -76,6 +81,30 @@ class Welcome(View):
                 'title':self.context_object_name,
                 'year':datetime.now().year,
             })
+
+@cbv_decorator(client_login_required)
+class GenerateKeys(View):
+    template_name='generateKeysClient.html'
+    context_object_name='Keys Generation'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(GenerateKeys, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, format=None):
+        return render(request,
+            self.template_name,
+            {
+                'title':self.context_object_name,
+                'year':datetime.now().year,
+            })
+
+    def post(self, request, format=None):
+        key = request.POST["publickey"]
+        public_key = str.encode(key)
+        pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+request.user.username+'_public.pem', 'wb')
+        pubkey_file.write(public_key)
+        return HttpResponse(request.user.username)
 
 @cbv_decorator(client_login_required)
 class OrdersList(View):
@@ -130,7 +159,12 @@ class NewOrder(View):
             )
         var.save()
         getOrder(dt,request)
-        messages.success(request,'Your order has been sent successfully.')
+
+        if(verify_signature(var)):
+            messages.success(request,'Your order has been sent successfully.')
+        else:
+            var.delete()
+            messages.error(request,'The verification has failed: order not valid')
         return redirect("client:ordersList")
 
 @cbv_decorator(client_login_required)
@@ -247,3 +281,23 @@ def generar_orden(request):
         buffer.close()
         response.write(pdf)
         return response
+
+def base64_2_bytes(base64string):
+    """Decode base64 string to bytes object"""
+    return base64.b64decode(base64string)
+
+def verify_signature(order):
+    """verifying"""
+    public_key = RSA.import_key(open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+str(order.username)+'_public.pem').read())
+    signature = base64_2_bytes(order.signature)
+
+    name = str(order.image.name)
+    extension = name[(name.rfind('.')+1):]
+    original_image = decrypt_image(order.id, extension, "originals")
+
+    h = SHA256.new(original_image)
+    try:
+        pkcs1_15.new(public_key).verify(h, signature)
+        return True
+    except (ValueError, TypeError):
+        return False

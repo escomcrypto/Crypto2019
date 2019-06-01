@@ -5,6 +5,7 @@ from . import views
 app_name = 'client'
 urlpatterns = [
     path('welcome', views.Welcome.as_view(), name='welcome'),
+    path('generateKeys', views.GenerateKeys.as_view(), name='generateKeys'),
     path('ordersList', views.OrdersList.as_view(), name='ordersList'),
     path('newOrder',views.NewOrder.as_view(),name='newOrder'),
     path('deliversClient',views.DeliversClient.as_view(), name='DeliversClient'),

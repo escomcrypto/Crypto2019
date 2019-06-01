@@ -82,12 +82,6 @@ class OrdersPainter(View):
 
     def get(self, request, format=None):
         orders = PaintingRequest.objects.filter(status="C").values()
-        orders_set = PaintingRequest.objects.filter().only('id','username','signature','image')
-        
-        for order in orders_set:
-            if not(verifying_process(order)):
-                orders = orders.exclude(id=order.id)
-
         return render(request, 
             self.template_name, 
             {
@@ -118,12 +112,17 @@ class NewDeliver(View):
         orderid=request.POST.get("orderid")
         print("Valor:",orderid)
         order = PaintingRequest.objects.get(id=orderid)
-        order.status="D"
+        order.signatureP = request.POST["signature"]
         order.imageD=request.FILES["image"]
         order.dateDelivery=datetime.now().date()
         order.save()
         getOrder(order.id)
-        messages.success(request,'The painting has been successfully.')
+        if(verify_signature(order)):
+            order.status="D"
+            order.save()
+            messages.success(request,'Your delivery has been sent successfully.')
+        else:
+            messages.error(request,'The verification has failed: delivery not valid')
         return redirect("painter:deliversPainter")
 
 @cbv_decorator(paintor_login_required)  
@@ -188,14 +187,16 @@ def base64_2_bytes(base64string):
     """Decode base64 string to bytes object"""
     return base64.b64decode(base64string)
 
-def verifying_process(order):
+def verify_signature(order):
     """verifying"""
-    public_key = RSA.import_key(open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+str(order.username)+'_public.pem').read())
-    signature = base64_2_bytes(order.signature)
-    name = str(order.image.name)
+    public_key = RSA.import_key(open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+'Salvador Dali'+'_public.pem').read())
+    signature = base64_2_bytes(order.signatureP)
+
+    name = str(order.imageD.name)
     extension = name[(name.rfind('.')+1):]
-    original_image = decrypt_image(order.id, extension, "originals")
-    h = SHA256.new(original_image)
+    deliver_image = decrypt_image(order.id, extension, "portraits")
+
+    h = SHA256.new(deliver_image)
     try:
         pkcs1_15.new(public_key).verify(h, signature)
         return True
@@ -207,4 +208,3 @@ def getOrder(orderid):
     encrypt_image(order[0]["id"], BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["imageD"].replace("/","\\"),"portraits")
     #delete the original image after encryption
     os.remove(BASE_DIR+"\\CryptoProject\\app\\static\\images\\"+order[0]["imageD"].replace("/","\\"))
-    #signing_process(order[0]["username"],order[0]["id"])

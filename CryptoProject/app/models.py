@@ -14,6 +14,7 @@ class PaintingRequest(models.Model):
     dateRequest = models.DateTimeField() #Date on which the request was made 
     description = models.TextField()
     signature = models.TextField()
+    signatureP = models.TextField(default=None, blank=True, null=True)
     image = models.ImageField(upload_to="originals", default="") #In this field the url of the image was stored
     imageD = models.ImageField(upload_to="portraits", default="")
     REQUEST_STATUS = (

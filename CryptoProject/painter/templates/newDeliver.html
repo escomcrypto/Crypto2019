@@ -60,9 +60,9 @@
         </div>
 
         <div class="form-group row">
-            <label for="Signature" class="col-sm-2 col-form-label text-left">Signature:</label>
+            <label for="signature" class="col-sm-2 col-form-label text-left">Signature:</label>
             <div class="col-sm-10">
-                <textarea type="signature" class="form-control" id="signature" name="signature" rows="5" disabled></textarea>
+                <textarea type="signature" class="form-control" id="signature" name="signature" rows="5" requiered="Need the private key"></textarea>
             </div>
         </div>
 
@@ -121,9 +121,9 @@
                     fileDisplayArea.innerHTML = "";
                     var img = new Image();
                     img.src = reader.result;
-                    var arrayBuffer = img.src, array = new Uint8Array(arrayBuffer);
-                    console.log(array);
-                    signImage(array)
+                    var data = img.src;
+                    data = data.substring(data.indexOf(",") + 1);
+                    signImage(data);
                     fileDisplayArea.appendChild(img);
                 }
                 reader.readAsDataURL(f);
@@ -224,11 +224,11 @@
             name: "RSASSA-PKCS1-v1_5"
         };
 
-        var encrypt_promise = window.crypto.subtle.sign(algorithmSign, key, data);
+        var encrypt_promise = window.crypto.subtle.sign(algorithmSign, key, _base64ToBytes(data));
         encrypt_promise.then(
             function (result_signature) {
                 signature = result_signature; //signature generated
-                var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(signature)));
+                base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(signature)));
                 console.log(base64String);
                 document.getElementById('signature').innerHTML = base64String;
             },
@@ -237,6 +237,16 @@
                 console.log(e);
             }
         );
+    }
+
+    function _base64ToBytes(base64) {
+        var binary_string = window.atob(base64);
+        var len = binary_string.length;
+        var bytes = new Uint8Array(len);
+        for (var i = 0; i < len; i++) {
+            bytes[i] = binary_string.charCodeAt(i);
+        }
+        return bytes;
     }
 
     /* *************************** */

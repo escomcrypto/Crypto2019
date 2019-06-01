@@ -1,0 +1,204 @@
+﻿<!doctype html>
+<html class="no-js" lang="es" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/css/foundation.min.css" integrity="sha256-xpOKVlYXzQ3P03j397+jWFZLMBXLES3IiryeClgU5og= sha384-gP4DhqyoT9b1vaikoHi9XQ8If7UNLO73JFOOlQV1RATrA7D0O7TjJZifac6NwPps sha512-AKwIib1E+xDeXe0tCgbc9uSvPwVYl6Awj7xl0FoaPFostZHOuDQ1abnDNCYtxL/HWEnVOMrFyf91TDgLPi9pNg==" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href={% static "css/client.css" %} />
+    <link rel="stylesheet" href={% static "css/app.css" %} />
+    <link rel="stylesheet" href={% static "css/login.css" %} />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="hover-underline-menu" data-menu-underline-from-center>
+        <ul class="menu align-center">
+            <li>
+                <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="120" height="20">
+            </li>
+            <li><a href="welcome">Home</a></li>
+            <li><a href="generateKeys">Generate Keys</a></li>
+            <li><a href="newOrder">New Order</a></li>
+            <li><a href="ordersList">Orders</a></li>
+            <li><a href="deliversClient">Deliveries</a></li>
+            <li><a href="logoutClient">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="row column align-center medium-5 large-4">
+        <div class="header-logo">
+            <figure class="header-logo-img">
+                <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="380" height="220">
+                <figcaption class="form-registration-img-caption">"Cryptography is the ultimate form of non-violent direct action". -Julian Assange</figcaption>
+            </figure>
+        </div>
+    </div>
+    <div class="row column align-center medium-5 large-4">
+        <div class="form-registration">
+            {% block content %}
+            <form class="form-registration-group" method="POST">
+                {% csrf_token %}
+                <p class="form-registration-advice">To generate a new key pair, please click the following button</p>
+                <input class="form-registration-submit-button" type="button" value="Generate Keys" onclick="downloadKeys()">
+            </form>
+            {% endblock %}
+        </div>
+    </div>
+    <!-- Compressed JavaScript -->
+    <!script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.5.3/dist/js/foundation.min.js" integrity="sha256-/PFxCnsMh+nTuM0k3VJCRch1gwnCfKjaP8rJNq5SoBg= sha384-9ksAFjQjZnpqt6VtpjMjlp2S0qrGbcwF/rvrLUg2vciMhwc1UJJeAAOLuJ96w+Nj sha512-UMSn6RHqqJeJcIfV1eS2tPKCjzaHkU/KqgAnQ7Nzn0mLicFxaVhm9vq7zG5+0LALt15j1ljlg8Fp9PT1VGNmDw==" crossorigin="anonymous"></!script>
+    <script>
+        function downloadKeys() {
+            key = generateKey();
+            downloadPrivateKey(key, 'PrivateKey.pem');
+        }
+
+        /* ************************* */
+        /* KEYS GENERATION FUNCTIONS */
+        /* ************************* */
+
+        function generateKey() {
+            //Text encoding
+            var encoder = new TextEncoder('utf-8');
+            //Algorithm Object
+            var algorithmKeyGen = {
+                name: "RSASSA-PKCS1-v1_5",
+                // RsaHashedKeyGenParams
+                modulusLength: 2048,
+                publicExponent: new Uint8Array([0x01, 0x00, 0x01]), //Equivalent to 65537
+                hash: {
+                    name: "SHA-256"
+                }
+            };
+            return window.crypto.subtle.generateKey(algorithmKeyGen, true, ["sign", "verify"]);
+        }
+
+        function sendToServer(pem) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                }
+            };
+            xhttp.open("POST", "generateKeys", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("publickey="+pem);
+        }
+
+        /* *********************** */
+        /* KEYS DOWNLOAD FUNCTIONS */
+        /* *********************** */
+
+        function downloadPrivateKey(key, filename) {
+            key.then(function (keys) {
+                return window.crypto.subtle.exportKey("pkcs8", keys.privateKey);
+            }).then(function (keydata) {
+                var pem = spkiToPEM(keydata, '-----BEGIN PRIVATE KEY-----\n', "-----END PRIVATE KEY-----");
+                deleteCookie('artprivk');
+                setCookie('artprivk', pem.replace(/(?:\r\n|\r|\n)/g, ':'));
+                download(filename, pem);
+                downloadPublicKey(key, 'PublicKey.pem');
+            }).catch(function (err) {
+                console.error(err);
+            });
+        }
+
+        function downloadPublicKey(key, filename) {
+            key.then(function (keys) {
+                return window.crypto.subtle.exportKey("spki", keys.publicKey);
+            }).then(function (keydata) {
+                var pem = spkiToPEM(keydata, '-----BEGIN PUBLIC KEY-----\n', "-----END PUBLIC KEY-----");
+                download(filename, pem);
+                sendToServer(pem);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        }
+
+        function download(filename, data) {
+            var element = document.createElement('a');
+            element.style.display = 'none';
+            element.target = '_blank';
+            // Define the data of the file using encodeURIComponent
+            element.setAttribute('href', 'data:application/octet-stream;charset=utf-8,' + encodeURIComponent(data));
+            // Add the download attribute of the hidden link
+            element.setAttribute('download', filename);
+            document.body.appendChild(element);
+            // Simulate click of the created link
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        /* ****************** */
+        /* KEY PEM FORMATTING */
+        /* ****************** */
+
+        function spkiToPEM(keydata, header1, header2) {
+            var keydataS = arrayBufferToString(keydata);
+            var keydataB64 = window.btoa(keydataS);
+            var keydataB64Pem = formatAsPem(keydataB64, header1, header2);
+            return keydataB64Pem;
+        }
+
+        function arrayBufferToString(buffer) {
+            var binary = '';
+            var bytes = new Uint8Array(buffer);
+            var len = bytes.byteLength;
+            for (var i = 0; i < len; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return binary;
+        }
+
+        function formatAsPem(str, header1, header2) {
+            var finalString = header1;
+            while (str.length > 0) {
+                finalString += str.substring(0, 64) + '\n';
+                str = str.substring(64);
+            }
+            finalString = finalString + header2;;
+            return finalString;
+        }
+
+        /* *************************** */
+        /* COOKIE MANAGEMENT FUNCTIONS */
+        /* *************************** */
+        function loadCookie() {
+            var cname = 'artprivk';
+            text = document.getElementById('privateTextArea');
+            key = getCookie(cname).replace(/(:)/g, '\n');
+            if (!(key == "")) {
+                text.innerHTML = key;
+            }
+        }
+
+        function setCookie(cname, cvalue) {
+            var d = new Date();
+            d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function deleteCookie(cname) {
+            document.cookie = cname + "=;max-age=0;path=/";
+        }
+    </script>
+</body>
+</html>
