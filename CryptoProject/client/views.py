@@ -82,7 +82,7 @@ class Welcome(View):
                 'year':datetime.now().year,
             })
 
-@cbv_decorator(client_login_required)
+#@cbv_decorator(client_login_required)
 class GenerateKeys(View):
     template_name='generateKeysClient.html'
     context_object_name='Keys Generation'

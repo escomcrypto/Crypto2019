@@ -24,6 +24,7 @@ from django.contrib import messages
 
 from django.contrib.auth import decorators
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 from django.contrib.auth import logout
@@ -74,6 +75,29 @@ class WelcomePainter(View):
                 'title':self.context_object_name,
                 'year':datetime.now().year,
             })
+
+class GenerateKeys(View):
+    template_name='generateKeysPainter.html'
+    context_object_name='Keys Generation'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(GenerateKeys, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, format=None):
+        return render(request,
+            self.template_name,
+            {
+                'title':self.context_object_name,
+                'year':datetime.now().year,
+            })
+
+    def post(self, request, format=None):
+        key = request.POST["publickey"]
+        public_key = str.encode(key)
+        pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+request.user.username+'_public.pem', 'wb')
+        pubkey_file.write(public_key)
+        return HttpResponse(request.user.username)
 
 @cbv_decorator(paintor_login_required)
 class OrdersPainter(View):

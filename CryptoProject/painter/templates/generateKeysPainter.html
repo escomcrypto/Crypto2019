@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html class="no-js" lang="es" dir="ltr">
 <head>
     <meta charset="utf-8">
@@ -19,11 +19,12 @@
             <li>
                 <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="120" height="20">
             </li>
-            <li><a href="welcomePainter">Home</a></li>
+            <li><a href="welcome">Home</a></li>
             <li><a href="generateKeys">Generate Keys</a></li>
-            <li><a href="ordersPainter">Orders</a></li>
-            <li><a href="deliversPainter">Deliveries</a></li>
-            <li><a href="logoutPainter">Logout</a></li>
+            <li><a href="newOrder">New Order</a></li>
+            <li><a href="ordersList">Orders</a></li>
+            <li><a href="deliversClient">Deliveries</a></li>
+            <li><a href="logoutClient">Logout</a></li>
         </ul>
     </nav>
     <div class="row column align-center medium-5 large-4">
@@ -94,8 +95,8 @@
                 return window.crypto.subtle.exportKey("pkcs8", keys.privateKey);
             }).then(function (keydata) {
                 var pem = spkiToPEM(keydata, '-----BEGIN PRIVATE KEY-----\n', "-----END PRIVATE KEY-----");
-                deleteCookie('artprivk');
-                setCookie('artprivk', pem.replace(/(?:\r\n|\r|\n)/g, ':'));
+                deleteCookie('artprivkP');
+                setCookie('artprivkP', pem.replace(/(?:\r\n|\r|\n)/g, ':'));
                 download(filename, pem);
                 downloadPublicKey(key, 'PublicKey.pem');
             }).catch(function (err) {
@@ -164,7 +165,7 @@
         /* COOKIE MANAGEMENT FUNCTIONS */
         /* *************************** */
         function loadCookie() {
-            var cname = 'artprivk';
+            var cname = 'artprivkP';
             text = document.getElementById('privateTextArea');
             key = getCookie(cname).replace(/(:)/g, '\n');
             if (!(key == "")) {
