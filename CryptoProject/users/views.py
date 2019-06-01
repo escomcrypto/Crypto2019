@@ -117,7 +117,6 @@ class RegisterView(View):
                     new_user.delete()
                     messages.info(request, 'Could not verify your number. Please contact support.')
                     return HttpResponseRedirect('/')
-
         return render(request,
                 self.template_name,
                 {
@@ -164,3 +163,13 @@ class CodeVerifyRView(View):
     def check_verification_request(self, request):
         client = nexmo.Client(key=settings.NEXMO_API_KEY, secret=settings.NEXMO_API_SECRET)
         return client.check_verification(request.session['verification_id'], code=request.POST.get('code'))
+
+    # HTTP Error 404
+'''class Error404(View):
+    template_name = 'app/404.html'
+    context_object_name = 'Error 404'
+
+    def get(self,request,format=None):
+        response = render_to_response("404.html")
+        response.status_code = 404
+        return response'''
