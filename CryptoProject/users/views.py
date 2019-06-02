@@ -117,7 +117,6 @@ class RegisterView(View):
                     new_user.delete()
                     messages.info(request, 'Could not verify your number. Please contact support.')
                     return HttpResponseRedirect('/')
-
         return render(request,
                 self.template_name,
                 {

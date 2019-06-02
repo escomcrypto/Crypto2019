@@ -82,7 +82,7 @@ class Welcome(View):
                 'year':datetime.now().year,
             })
 
-@cbv_decorator(client_login_required)
+#@cbv_decorator(client_login_required)
 class GenerateKeys(View):
     template_name='generateKeysClient.html'
     context_object_name='Keys Generation'
@@ -102,7 +102,6 @@ class GenerateKeys(View):
     def post(self, request, format=None):
         key = (request.POST["publickey"]).encode(encoding='UTF-8',errors='strict')
         public_key = base64_2_bytes(key)
-        #public_key = str.encode(key)
         pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+request.user.username+'_public.pem', 'wb')
         pubkey_file.write(public_key)
         return HttpResponse(key)

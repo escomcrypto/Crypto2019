@@ -16,13 +16,14 @@ from Crypto.Hash import SHA384
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.http import HttpRequest
 from django.contrib import messages
 from django.views.generic import View
+from django.template import RequestContext
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
@@ -143,8 +144,23 @@ def decrypt_image(id, extension, directory):
     plain_image_bytes = cipher.decrypt(cipher_image)
     return plain_image_bytes
 
-# HTTP Error 404
-def handler404(request, exception, template_name="404.html"):
-    response = render_to_response("404.html")
-    response.status_code = 404
+def error_404_view(request,exception):
+    data = {"name": "ThePythonDjango.com"}
+    return render(request,'app/404.html', data)
+
+def error_500_view(request):
+    context = RequestContext(request)
+    response = render_to_response('app/500.html', context)
+    response.status_code = 500
     return response
+
+def error_400_view(request, exception):
+    data = {"name": "ThePythonDjango.com"}
+    return render(request,'app/400.html', data)
+
+def error_403_view(request,exception):
+    data = {"name": "ThePythonDjango.com"}
+    return render(request,'app/403.html', data)
+
+
+

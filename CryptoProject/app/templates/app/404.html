@@ -1,110 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load static %}
-    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css'>
-    <link rel="stylesheet" href={% static "css/home_style.css" %} />
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.css">
-    <meta charset="UTF-8">
-    <title>{{title}}</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+	<title>Error 404</title>
+
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
+	 <!-- Custom stlylesheet -->
+	<style type="text/css">
+	* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+#notfound {
+  position: relative;
+  height: 100vh;
+}
+
+#notfound .notfound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.notfound {
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.notfound .notfound-404 {
+  height: 190px;
+}
+
+.notfound .notfound-404 h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 146px;
+  font-weight: 700;
+  margin: 0px;
+  color: #232323;
+}
+
+.notfound .notfound-404 h1>span {
+  display: inline-block;
+  width: 120px;
+  height: 120px;
+  background-image: url('https://imagenti.li/vHh.png');
+  background-size: cover;
+  -webkit-transform: scale(1.4);
+      -ms-transform: scale(1.4);
+          transform: scale(1.4);
+  z-index: -1;
+}
+
+.notfound h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  color: #232323;
+}
+
+.notfound p {
+  font-family: 'Montserrat', sans-serif;
+  color: #787878;
+  font-weight: 300;
+}
+
+.notfound a {
+  font-family: 'Montserrat', sans-serif;
+  display: inline-block;
+  padding: 12px 30px;
+  font-weight: 700;
+  background-color: #f99827;
+  color: #fff;
+  border-radius: 40px;
+  text-decoration: none;
+  -webkit-transition: 0.2s all;
+  transition: 0.2s all;
+}
+
+.notfound a:hover {
+  opacity: 0.8;
+}
+
+@media only screen and (max-width: 767px) {
+  .notfound .notfound-404 {
+    height: 115px;
+  }
+  .notfound .notfound-404 h1 {
+    font-size: 86px;
+  }
+  .notfound .notfound-404 h1>span {
+    width: 86px;
+    height: 86px;
+  }
+}
+
+	</style>
+
 </head>
+
 <body>
 
-    <nav class="navbar is-fixed-top is-black">
-        <div class="container">
-            <div class="navbar-brand">
-                <a class="navbar-item">
-                    <img src="https://i.pinimg.com/originals/78/df/fd/78dffd0ca23fc5c8b51f3cc6cff8ee74.jpg" alt="Art Logo" width="50">
-                </a>
-                <span class="navbar-burger burger" data-target="navbarMenuHeroB">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
-            </div>
-            <div id="navbarMenuHeroB" class="navbar-menu">
-                <div class="navbar-end">
-                    <a class="navbar-item is-active" href="/">
-                        <i class="fa fa-home" style="padding-right: 5px;"></i>Home
-                    </a>
-                    <a class="navbar-item" href="user/login">
-                        <i class="fas fa-sign-in-alt" style="padding-right: 4px;"></i>Sign In
-                    </a>
-                    <a class="navbar-item" href="user/register">
-                        <i class="fas fa-user-plus" style="padding-right: 4px;"></i>Sign Up
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <script type="text/javascript">
-    (function() {
-        var burger = document.querySelector('.burger');
-        var nav = document.querySelector('#'+burger.dataset.target);
+	<div id="notfound">
+		<div class="notfound">
+			<div class="notfound-404">
+				<h1>4<span></span>4</h1>
+			</div>
+			<h2>Oops! Page not be found</h2>
+			<p>Sorry but the page you are looking for does not exist, have been removed, name changed or is temporarily unavailable</p>
+		</div>
+	</div>
 
-        burger.addEventListener('click', function(){
-            burger.classList.toggle('is-active');
-            nav.classList.toggle('is-active');
-        });
-    })();
-    </script>
-    <!--start Waves-->
-    <!--<div id="waves">
-        <div class="wave-1"></div>
-        <div class="wave-2"></div>
-        <div class="wave-3"></div>
-    </div>-->
-    <!--END Waves-->
-    <!--Start FLOW-->
-    <div class="block">
-        <div class="container">
-            <div id="flow">
-                <span class="flow-1"></span>
-                <span class="flow-2"></span>
-                <span class="flow-3"></span>
-            </div>
-        </div>
-    </div>
-    <!--END FLOW-->
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
-    <section class="hero is-dark is-large">
-        <div class="hero-head">
-        </div>
-
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <p class="title">
-                    <h1>
-                        <span>A</span>
-                        <span>R</span>
-                        <span>T</span>
-                        <span></span>
-                    </h1>
-                </p>
-                <p class="subtitle">
-                    <a id="buttonS" href="user/login">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <i class="fas fa-palette" style="padding-right: 4px;"></i>Let's get started!
-                    </a>
-                </p>
-            </div>
-        </div>
-        <div class="hero-foot">
-        </div>
-    </section>
-    <footer class="footer">
-        <div class="container">
-            <div class="content has-text-centered">
-                <p>
-                    <strong>Art &trade;</strong> All rights reserved
-                </p>
-            </div>
-        </div>
-    </footer>
-
-</body>
 </html>

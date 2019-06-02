@@ -11,4 +11,5 @@ urlpatterns = [
     path('downloadImage',views.DownloadImage.as_view(),name="downloadImage"),
     path('viewOrder',views.ViewOrder.as_view(), name='viewOrder'),
     path('logoutPainter', views.LogoutView.as_view(), name='logoutPainter'),
+    path('generateKeys', views.GenerateKeys.as_view(), name='generateKeys'),
 ]

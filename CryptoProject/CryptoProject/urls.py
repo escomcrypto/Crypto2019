@@ -2,6 +2,7 @@
 Definition of urls for CryptoProject.
 """
 from django.conf.urls import include
+from app.views import error_404_view, error_500_view, error_400_view, error_403_view
 
 from datetime import datetime
 from django.urls import path
@@ -17,10 +18,10 @@ handler400, handler403, handler404, handler500
 app_name = 'cryptoproject'
 
 
-#handler400 = views.bad_request
-#handler403 = views.permission_denied
-handler404 = 'app.views.handler404'
-#handler500 = views.server_error
+handler400 = error_400_view
+handler403 = error_403_view
+handler404 = error_404_view
+handler500 = error_500_view
 
 urlpatterns = [path('', views.HomeView.as_view(), name='home'),
                 path('user/', include('users.urls')),
