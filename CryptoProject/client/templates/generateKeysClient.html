@@ -41,7 +41,7 @@
             <form class="form-registration-group" method="POST">
                 {% csrf_token %}
                 <p class="form-registration-advice">To generate a new key pair, please click the following button</p>
-                <input class="form-registration-submit-button" type="button" value="Generate Keys" onclick="downloadKeys()">
+                <input class="form-registration-submit-button" type="button" value="Generate Keys" onclick="alert('Your keys has been created successfully. Click on Accept for download'), downloadKeys()">
             </form>
             {% endblock %}
         </div>
