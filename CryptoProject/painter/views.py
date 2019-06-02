@@ -75,7 +75,7 @@ class WelcomePainter(View):
                 'title':self.context_object_name,
                 'year':datetime.now().year,
             })
-
+@cbv_decorator(paintor_login_required)
 class GenerateKeys(View):
     template_name='generateKeysPainter.html'
     context_object_name='Keys Generation'
