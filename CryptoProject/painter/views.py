@@ -93,11 +93,11 @@ class GenerateKeys(View):
             })
 
     def post(self, request, format=None):
-        key = request.POST["publickey"]
-        public_key = str.encode(key)
+        key = (request.POST["publickey"]).encode(encoding='UTF-8',errors='strict')
+        public_key = base64_2_bytes(key)
         pubkey_file = open(BASE_DIR+'\\CryptoProject\\keys\\users\\'+request.user.username+'_public.pem', 'wb')
         pubkey_file.write(public_key)
-        return HttpResponse(request.user.username)
+        return HttpResponse(key)
 
 @cbv_decorator(paintor_login_required)
 class OrdersPainter(View):

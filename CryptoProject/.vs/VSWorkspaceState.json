@@ -7,8 +7,9 @@
     "\\client",
     "\\client\\templates",
     "\\CryptoProject",
+    "\\painter",
     "\\painter\\templates"
   ],
-  "SelectedNode": "\\client\\views.py",
+  "SelectedNode": "\\painter\\templates\\generateKeysPainter.html",
   "PreviewInSolutionExplorer": false
 }

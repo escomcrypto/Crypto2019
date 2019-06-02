@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html class="no-js" lang="es" dir="ltr">
 <head>
     <meta charset="utf-8">
@@ -82,7 +82,7 @@
             };
             xhttp.open("POST", "generateKeys", true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send("publickey="+pem);
+            xhttp.send("publickey="+btoa(pem));
         }
 
         /* *********************** */
