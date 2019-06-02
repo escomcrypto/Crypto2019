@@ -1,0 +1,13 @@
+2019-06-01
+
+Order Numbers: 5
+
+Order Details 
+	Order Date: 2019-06-02
+	User: Eric Alejandro
+	Order Name: My Request
+	Description: A new portrait
+
+	Delivery Date: 2019-07-01
+
+	Total Cost: $215.00 
